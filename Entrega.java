@@ -61,7 +61,6 @@ class Entrega {
     /*
      * És cert que ∀x ∃!y. P(x) -> Q(x,y) ?
      */
-    //Never gonna give you up
     static boolean exercici1(int[] universe, Predicate<Integer> p, BiPredicate<Integer, Integer> q) {
       for(int x:universe){
         int count = 0;
