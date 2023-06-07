@@ -9,6 +9,8 @@ import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
+import javax.swing.text.html.HTMLDocument.RunElement;
+
 /*
  * Aquesta entrega consisteix en implementar tots els mètodes annotats amb el comentari "// TO DO".
  *
@@ -60,8 +62,18 @@ class Entrega {
      * És cert que ∀x ∃!y. P(x) -> Q(x,y) ?
      */
     static boolean exercici1(int[] universe, Predicate<Integer> p, BiPredicate<Integer, Integer> q) {
-      //esto es una prueba
-      return false; // TO DO
+      for(int x:universe){
+        int count = 0;
+        for(int y:universe){
+          if(!p.test(x)||q.test(x, y)){
+            count++;
+          }
+        }
+        if(count!=1){
+          return false;
+        }
+      }
+      return true;
     }
 
     /*
@@ -504,7 +516,17 @@ class Entrega {
      * Si la solució és x ≡ c (mod m), retornau `new int[] { c, m }`, amb 0 ⩽ c < m.
      * Si no en té, retornau null.
      */
+    static int mcd(int a, int b){
+      return -1; //TO DO
+    }
+    static int mcm(int a, int b){
+      return -1; //TO DO
+    }
+    static int[] euclides(int a, int b){
+      return null;
+    }
     static int[] exercici1(int a, int b, int n) {
+      
       return null; // TO DO
     }
 
@@ -637,10 +659,27 @@ class Entrega {
    * Podeu aprofitar el mètode `assertThat` per comprovar fàcilment que un valor sigui `true`.
    */
   public static void main(String[] args) {
-    Tema1.tests();
-    Tema2.tests();
-    Tema3.tests();
-    Tema4.tests();
+    try{
+      Tema1.tests();
+    }catch(AssertionError ex){
+      System.err.println("Error tema 1 "+ex.getStackTrace()[1]);
+    }
+    
+    try{
+      Tema2.tests();
+    }catch(AssertionError ex){
+      System.err.println("Error tema 2 "+ex.getStackTrace()[1]);
+    }
+    try{
+      Tema3.tests();
+    }catch(AssertionError ex){
+      System.err.println("Error tema 3 "+ex.getStackTrace()[1]);
+    }
+    try{
+      Tema4.tests();
+    }catch(AssertionError ex){
+      System.err.println("Error tema 4 "+ex.getStackTrace()[1]);
+    }
   }
 
   /// Si b és cert, no fa res. Si b és fals, llança una excepció (AssertionError).
