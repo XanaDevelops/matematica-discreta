@@ -80,7 +80,15 @@ class Entrega {
      * És cert que ∃!x ∀y. P(y) -> Q(x,y) ?
      */
     static boolean exercici2(int[] universe, Predicate<Integer> p, BiPredicate<Integer, Integer> q) {
-      return false; // TO DO
+      int co = 0;
+      for (int y = 0; y < universe.length; y++) {
+        for (int x = 0; x < universe.length; x++) {
+          if (!p.test(universe[y]) || q.test(universe[x], universe[y])) {
+            co++;
+          }
+        }
+      }
+      return co == 1; // TO DO
     }
 
     /*
