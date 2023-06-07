@@ -34,9 +34,9 @@ import javax.swing.text.html.HTMLDocument.RunElement;
  *
  * Podeu fer aquesta entrega en grups de com a màxim 3 persones, i necessitareu com a minim Java 8.
  * Per entregar, posau a continuació els vostres noms i entregau únicament aquest fitxer.
- * - Nom 1:
- * - Nom 2:
- * - Nom 3:
+ * - Nom 1: Marc Garcia Bonet
+ * - Nom 2: Daniel García Vázquez
+ * - Nom 3: Pere Garcias Miralles
  *
  * L'entrega es farà a través d'una tasca a l'Aula Digital que obrirem abans de la data que se us
  * hagui comunicat i vos recomanam que treballeu amb un fork d'aquest repositori per seguir més
