@@ -62,6 +62,10 @@ class Entrega {
      * És cert que ∀x ∃!y. P(x) -> Q(x,y) ?
      */
     static boolean exercici1(int[] universe, Predicate<Integer> p, BiPredicate<Integer, Integer> q) {
+      if(universe.length==0){ //univers buit, quant. universal cert
+        return true;
+      }
+      
       for(int x:universe){
         int count = 0;
         for(int y:universe){
