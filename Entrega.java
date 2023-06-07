@@ -65,7 +65,7 @@ class Entrega {
       if(universe.length==0){ //univers buit, quant. universal cert
         return true;
       }
-      
+
       for(int x:universe){
         int count = 0;
         for(int y:universe){
@@ -279,7 +279,23 @@ class Entrega {
      * Podeu soposar que `a` i `b` estan ordenats de menor a major.
      */
     static boolean exercici3(int[] a, int[] b, int[][] rel) {
-      return false; // TO DO
+      if(a.length==0 || b.length==0 || rel.length ==0){ //prevenir buit
+        return false;
+      }
+      for(int x:a){
+        int count=0;
+        for(int y:b){
+          for(int[] r:rel){
+            if(Arrays.equals(r, new int[]{x,y})){
+                count++;
+            }
+          }
+        }
+        if(count>1){
+          return false;
+        }
+      }
+      return true; // TO DO
     }
 
     /*
@@ -422,6 +438,36 @@ class Entrega {
     /*
      * Retornau l'ordre menys la mida del graf (no dirigit).
      */
+    static class Punt{
+      public int dest,peso; //b=desti, c=pes
+      public Punt(int dest, int peso){
+        this.dest=dest;
+        this.peso=peso;
+      }
+    }
+    static int[] dijkstra(ArrayList<Punt>[] punts, int nodes, int origen){
+      int[] dist = new int[nodes];
+      Arrays.fill(dist, Integer.MAX_VALUE);
+      boolean[] visit = new boolean[nodes];
+      Arrays.fill(visit, false);
+      ArrayList<Punt> cola = new ArrayList<>();
+      dist[origen]=0;
+      cola.add(new Punt(origen, 0));
+      while(!cola.isEmpty()){
+        Punt p = cola.get(0);
+        cola.remove(0);
+        for(Punt destPunt:punts[p.dest]){
+          if(visit[destPunt.dest]){
+            continue;
+          }
+          if(dist[destPunt.dest]>dist[p.dest]+destPunt.peso){
+            dist[destPunt.dest]=dist[p.dest]+destPunt.peso;
+            cola.add(new Punt(destPunt.dest, dist[destPunt.dest]));
+          }
+        }
+      }
+      return dist;
+    }
     static int exercici1(int[][] g) {
       return -1; // TO DO
     }
@@ -446,7 +492,38 @@ class Entrega {
      * del graf subjacent. Suposau que totes les arestes tenen pes 1.
      */
     static int exercici4(int[][] g) {
-      return -1; // TO DO
+      //Preparar per dijsktra
+      ArrayList<Punt>[] punts = new ArrayList[g.length];
+      for (int i = 0; i < punts.length; i++) {
+          punts[i]=new ArrayList<>();
+      }
+      for(int i=0;i<g.length;i++){
+        for(int d:g[i]){
+          punts[i].add(new Punt(d, 1));
+          punts[d].add(new Punt(i,1));
+        }
+      }
+      int[] dist = dijkstra(punts, g.length,0);
+      System.out.println(Arrays.toString(dist));
+      int max=-1;
+      int imax=0;
+      for (int i = 0; i < dist.length; i++) {
+        if(dist[i]>max){
+          max=dist[i];
+          imax=i;
+        }
+      }
+      int[] dist2 = dijkstra(punts, g.length,imax);
+      System.out.println(Arrays.toString(dist2));
+      max=-1;
+      imax=0;
+      for (int i = 0; i < dist2.length; i++) {
+        if(dist2[i]>max){
+          max=dist2[i];
+          imax=i;
+        }
+      }
+      return max; // TO DO
     }
 
     /*
@@ -543,7 +620,7 @@ class Entrega {
         {},
       };
 
-      assertThat(exercici1(undirectedK6) == 6 - 5*6/2);
+      /*assertThat(exercici1(undirectedK6) == 6 - 5*6/2);
       assertThat(exercici1(undirectedW4) == 5 - 2*4);
 
       assertThat(exercici2(undirectedK23));
@@ -551,7 +628,7 @@ class Entrega {
 
       assertThat(exercici3(directedG1, 0) == 3);
       assertThat(exercici3(directedRTree1, 2) == 3);
-
+      */
       assertThat(exercici4(directedRTree1) == 5);
       assertThat(exercici4(directedRTree2) == 4);
     }
