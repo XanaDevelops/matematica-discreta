@@ -81,14 +81,14 @@ class Entrega {
      */
     static boolean exercici2(int[] universe, Predicate<Integer> p, BiPredicate<Integer, Integer> q) {
       int co = 0;
-      for (int y = 0; y < universe.length; y++) {
-        for (int x = 0; x < universe.length; x++) {
-          if (!p.test(universe[y]) || q.test(universe[x], universe[y])) {
+      for(int y : universe) {
+        for(int x : universe) {
+          if (!p.test(y) || q.test(x,y)) {
             co++;
           }
         }
       }
-      return co == 1; // TO DO
+      return co == 1;
     }
 
     /*
