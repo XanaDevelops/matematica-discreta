@@ -84,7 +84,7 @@ class Entrega {
       for (int i = 0; i < universe.length; i++) {
         boolean trobat = false;
         for (int j = 0; !trobat && j < universe.length; j++) {
-          if (!(!p.test(universe[j]) || q.test(universe[i], universe[j]))) {
+          if (p.test(universe[j]) && !q.test(universe[i], universe[j])) {
             trobat = true;
           }
         }
