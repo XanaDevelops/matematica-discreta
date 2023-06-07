@@ -210,7 +210,49 @@ class Entrega {
      * Podeu soposar que `a` està ordenat de menor a major.
      */
     static boolean exercici1(int[] a, int[][] rel) {
-      return false; // TO DO
+      boolean reflexiva = true;
+      for (int i = 0; reflexiva && i < a.length; i++) {
+        boolean trobada = false;
+        for (int j = 0; !trobada && j < rel.length; j++) {
+            if ((rel[j][0] == a[i]) && (rel[j][1] == a[i])) {
+              trobada = true;
+            }
+        }
+        if (!trobada) {
+          reflexiva = false;
+        }
+      }
+
+      boolean simetrica = true;
+      for (int i = 0; simetrica && i < rel.length; i++) {
+          boolean trobada = false;
+          for (int j = 0; !trobada && j < rel.length; j++) {
+            if ((rel[j][0] == rel[i][1]) && (rel[j][1] == rel[i][0])) {
+              trobada = true;
+            }
+          }
+          if (!trobada) {
+            simetrica = false;
+          }
+        }
+
+        boolean transitiva = true;
+        for (int i = 0; transitiva && i < rel.length; i++) {
+          for (int j = 0; j < rel.length; j++) {
+            if (rel[j][0] == rel[i][1]) {
+              boolean trobada = false;
+              for (int k = 0; !trobada && k < rel.length; k++) {
+                if ((rel[k][0] == rel[i][0]) && (rel[k][1] == rel[j][1])) {
+                  trobada = true;
+                }
+              }
+              if (!trobada) {
+                transitiva = false;
+              }
+            }
+          }
+        }
+      return (reflexiva && simetrica && transitiva);
     }
 
     /*
