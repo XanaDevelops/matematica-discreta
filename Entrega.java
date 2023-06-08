@@ -677,14 +677,15 @@ class Entrega {
       return -1; //TO DO
     }
     static int[] euclides(int a, int b){
+      System.out.println("Ec "+a+" "+b);
       int r1=a, r2=b, q, x1=1, x2=0, y1=0, y2=1;
       if(a<b){
         System.err.println("A es MENOR que B");
       }
-      System.out.println(a+" "+b);
+      
       while(r2!=0){
         q=r1/r2;
-        System.out.println("-> "+List.of(r1, r2, q, x1, x2, y1, y2));
+        //System.out.println("-> "+List.of(r1, r2, q, x1, x2, y1, y2));
         int res = r1%r2;
         r1=r2;
         r2=res;
@@ -717,7 +718,7 @@ class Entrega {
       int[] e;
       e = euclides(a, n);
 
-      System.out.println(Arrays.toString(e));
+      //System.out.println(Arrays.toString(e));
       int d = e[0];
       if(b%d!=0){
         System.out.println("no divide");
@@ -726,10 +727,10 @@ class Entrega {
       for (int i = 0; i < e.length; i++) {
         e[i]*=(b/d);
       }
-      System.out.println(Arrays.toString(e));
-      int[] r = new int[]{mod(e[1],n/d), n/d};
-      System.out.println(Arrays.toString(r));
-      return r; // TO DO
+      //System.out.println(Arrays.toString(e));
+      int[] r = new int[]{mod(e[1],n/d), Math.abs(n/d)};
+      //System.out.println("r " + Arrays.toString(r));
+      return r; // CHECK
     }
 
     /*
@@ -820,7 +821,7 @@ class Entrega {
      * Aquí teniu alguns exemples i proves relacionades amb aquests exercicis (vegeu `main`)
      */
     static void tests() {
-      assertThat(Arrays.equals(exercici1(35, 14, 56), new int[]{2,8})); //QUITAR
+      assertThat(Arrays.equals(exercici1(-42, 0, 35), new int[]{0,5})); //QUITAR
 
       assertThat(Arrays.equals(exercici1(17, 1, 30), new int[] { 23, 30 }));
       assertThat(Arrays.equals(exercici1(-2, -4, 6), new int[] { 2, 3 }));
