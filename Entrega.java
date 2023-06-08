@@ -476,7 +476,27 @@ class Entrega {
      * Suposau que el graf (no dirigit) és connex. És bipartit?
      */
     static boolean exercici2(int[][] g) {
-      return false; // TO DO
+      int[] conex = new int[g.length]; //0=desconocido, 1, -1 grupos
+      Arrays.fill(conex, 0);
+      List<Integer> cola = new ArrayList<Integer>();
+      conex[0]=1;
+      cola.add(0);
+      while(!cola.isEmpty()){
+        int ori = cola.get(0);
+        int valorOri = conex[ori];
+        cola.remove(0);
+        for(int destino:g[ori]){
+          if(conex[destino]==0){
+            conex[destino] = valorOri*-1;
+            cola.add(destino);
+            continue;
+          }
+          if(conex[destino]==valorOri){
+            return false;
+          }
+        }
+      }
+      return true; // TO DO
     }
 
     /*
@@ -503,8 +523,9 @@ class Entrega {
           punts[d].add(new Punt(i,1));
         }
       }
+      //cercar el punt més distant
       int[] dist = dijkstra(punts, g.length,0);
-      System.out.println(Arrays.toString(dist));
+      //System.out.println(Arrays.toString(dist));
       int max=-1;
       int imax=0;
       for (int i = 0; i < dist.length; i++) {
@@ -513,8 +534,9 @@ class Entrega {
           imax=i;
         }
       }
+      //des del node més distant, trobar el més distant, en cas d'arbres, diametre
       int[] dist2 = dijkstra(punts, g.length,imax);
-      System.out.println(Arrays.toString(dist2));
+      //System.out.println(Arrays.toString(dist2));
       max=-1;
       imax=0;
       for (int i = 0; i < dist2.length; i++) {
@@ -620,7 +642,7 @@ class Entrega {
         {},
       };
 
-      /*assertThat(exercici1(undirectedK6) == 6 - 5*6/2);
+      assertThat(exercici1(undirectedK6) == 6 - 5*6/2);
       assertThat(exercici1(undirectedW4) == 5 - 2*4);
 
       assertThat(exercici2(undirectedK23));
@@ -628,7 +650,7 @@ class Entrega {
 
       assertThat(exercici3(directedG1, 0) == 3);
       assertThat(exercici3(directedRTree1, 2) == 3);
-      */
+      
       assertThat(exercici4(directedRTree1) == 5);
       assertThat(exercici4(directedRTree2) == 4);
     }
@@ -651,6 +673,13 @@ class Entrega {
      * Si la solució és x ≡ c (mod m), retornau `new int[] { c, m }`, amb 0 ⩽ c < m.
      * Si no en té, retornau null.
      */
+    static int mod(int a, int b){
+      int res = a%b;
+      if(res>=0){
+        return res;
+      }
+      return res+Math.abs(b);
+    }
     static int mcd(int a, int b){
       return -1; //TO DO
     }
@@ -660,6 +689,7 @@ class Entrega {
     static int[] euclides(int a, int b){
       return null;
     }
+    
     static int[] exercici1(int a, int b, int n) {
       
       return null; // TO DO
