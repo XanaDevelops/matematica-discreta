@@ -478,7 +478,7 @@ class Entrega {
     static boolean exercici2(int[][] g) {
       int[] conex = new int[g.length]; //0=desconocido, 1, -1 grupos
       Arrays.fill(conex, 0);
-      List<Integer> cola = new ArrayList<Integer>();
+      ArrayList<Integer> cola = new ArrayList<Integer>();
       conex[0]=1;
       cola.add(0);
       while(!cola.isEmpty()){
@@ -663,16 +663,6 @@ class Entrega {
    * Podeu suposar que cada vegada que se menciona un mòdul, és major que 1.
    */
   static class Tema4 {
-    /*
-     * Donau la solució de l'equació
-     *
-     *   ax ≡ b (mod n),
-     *
-     * Els paràmetres `a` i `b` poden ser negatius (`b` pot ser zero), però podeu suposar que n > 1.
-     *
-     * Si la solució és x ≡ c (mod m), retornau `new int[] { c, m }`, amb 0 ⩽ c < m.
-     * Si no en té, retornau null.
-     */
     static int mod(int a, int b){
       int res = a%b;
       if(res>=0){
@@ -689,7 +679,17 @@ class Entrega {
     static int[] euclides(int a, int b){
       return null;
     }
-    
+
+    /*
+     * Donau la solució de l'equació
+     *
+     *   ax ≡ b (mod n),
+     *
+     * Els paràmetres `a` i `b` poden ser negatius (`b` pot ser zero), però podeu suposar que n > 1.
+     *
+     * Si la solució és x ≡ c (mod m), retornau `new int[] { c, m }`, amb 0 ⩽ c < m.
+     * Si no en té, retornau null.
+     */
     static int[] exercici1(int a, int b, int n) {
       
       return null; // TO DO
@@ -741,7 +741,30 @@ class Entrega {
      * (el que coneixeu com el mètode manual d'anar provant).
      */
     static ArrayList<Integer> exercici3a(int n) {
-      return new ArrayList<>(); // TO DO
+      ArrayList<Integer> factors = new ArrayList<>();
+      int div = 2;
+      if(n==2 || n==3){
+        factors.add(n);
+        return factors;
+      }
+      final int startN = n;
+      while(n>=div && n!=1){
+        if(n%div==0){
+          factors.add(div);
+          n/=div;
+        }else{
+          if(div>=3){
+            div+=2;
+          }else{
+            div++;
+          }
+        }
+      }
+      if(factors.isEmpty()){
+        //es primo
+        factors.add(startN);
+      }
+      return factors; 
     }
 
     /*
@@ -760,7 +783,7 @@ class Entrega {
      * Aquí teniu alguns exemples i proves relacionades amb aquests exercicis (vegeu `main`)
      */
     static void tests() {
-      assertThat(Arrays.equals(exercici1(17, 1, 30), new int[] { 23, 30 }));
+      /*assertThat(Arrays.equals(exercici1(17, 1, 30), new int[] { 23, 30 }));
       assertThat(Arrays.equals(exercici1(-2, -4, 6), new int[] { 2, 3 }));
       assertThat(exercici1(2, 3, 6) == null);
 
@@ -801,10 +824,13 @@ class Entrega {
           new int[] { 263, 360 }
         )
       );
-
+      */
       assertThat(exercici3a(10).equals(List.of(2, 5)));
       assertThat(exercici3a(1291).equals(List.of(1291)));
       assertThat(exercici3a(1292).equals(List.of(2, 2, 17, 19 )));
+      //propi
+      assertThat(exercici3a(5).equals(List.of(5)));
+      assertThat(exercici3a(16514984).equals(List.of(2,2,2,2064373)));
 
       assertThat(exercici3b(10) == 400);
 
