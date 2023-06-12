@@ -59,7 +59,7 @@ class Entrega {
    */
   static class Tema1 {
     /*
-     * És cert que ∀x ∃!y. P(x) -> Q(x,y) ?
+     * És cert que ∀x ∃!y. P(x) -> Q(x,y) ? no
      */
     static boolean exercici1(int[] universe, Predicate<Integer> p, BiPredicate<Integer, Integer> q) {
       if(universe.length==0){ //univers buit, quant. universal cert
