@@ -549,11 +549,6 @@ class Entrega {
         }
 
       }
-
-      String nodes = "";
-      for (int z = 0; z < nodesVisitats.length; z++) {
-        nodes += nodesVisitats[z];
-      }
       return co;
     }
 
