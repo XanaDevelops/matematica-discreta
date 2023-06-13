@@ -133,7 +133,17 @@ class Entrega {
      * És cert que (∀x. P(x)) -> (∀x. Q(x)) ?
      */
     static boolean exercici4(int[] universe, Predicate<Integer> p, Predicate<Integer> q) {
-      return false; // TO DO
+      boolean contraexempleP = false;
+      for (int i = 0; !contraexempleP && i < universe.length; i++) {
+        contraexempleP = !p.test(universe[i]);
+      }
+      boolean contraexempleQ = false;
+      if (!contraexempleP) {
+        for (int i = 0; !contraexempleQ && i < universe.length; i++) {
+          contraexempleQ = q.test(universe[i]);
+      }
+    }
+      return (contraexempleP || !contraexempleQ);
     }
 
     /*
@@ -552,7 +562,7 @@ class Entrega {
       return co;
     }
 
-    // Mètode propi per aplicar a l'exercici3
+    // Mètode propi: retorna si un noda ja ha estat visitat
     private static boolean esRepetit(int[] visitats, int darrer, int node) {
       boolean repetit = false;
       for (int i = 0; !repetit && i <= darrer; i++) {
@@ -561,7 +571,7 @@ class Entrega {
       return repetit;
     }
 
-    // Mètode propi per aplicar a l'exercici3
+    // Mètode propi: si tots els nodes adjacents d'un node (pare) han estat visitats
     private static boolean fillsVisitats(int[][] g, int[] visitats, int darrer, int pare) {
       boolean totsVisitats = true;
       for (int i = 0; totsVisitats && i < g[pare].length; i++) {
