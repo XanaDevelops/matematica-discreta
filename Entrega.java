@@ -108,14 +108,14 @@ class Entrega {
         }
         for (int x : universe) {
             for (int y : universe) {
-                boolean vertader = true;
+                boolean xor = true;
                 for (int z : universe) {
                     if (!(p.test(x, z) ^ q.test(y, z))) {
-                        vertader = false;
+                        xor = false;
                         break;
                     }
                 }
-                if (vertader) {
+                if (xor) {
                     return true;
                 }
             }
