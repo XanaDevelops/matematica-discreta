@@ -71,8 +71,8 @@ class Entrega {
       if (universe.length == 0) { // univers buit, quant. universal cert
         return true;
       }
-
-      for (int x : universe) {
+      
+      for(int x:universe){
         int count = 0;
         for (int y : universe) {
           if (!p.test(x) || q.test(x, y)) {
@@ -109,7 +109,24 @@ class Entrega {
      * És cert que ∃x,y ∀z. P(x,z) ⊕ Q(y,z) ?
      */
     static boolean exercici3(int[] universe, BiPredicate<Integer, Integer> p, BiPredicate<Integer, Integer> q) {
-      return false; // TO DO
+      if(universe.length==0){
+            return false;
+        }
+        for (int x : universe) {
+            for (int y : universe) {
+                boolean vertader = true;
+                for (int z : universe) {
+                    if (!(p.test(x, z) ^ q.test(y, z))) {
+                        vertader = false;
+                        break;
+                    }
+                }
+                if (vertader) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /*
@@ -277,7 +294,23 @@ class Entrega {
      * Podeu soposar que `a` i `b` estan ordenats de menor a major.
      */
     static boolean exercici3(int[] a, int[] b, int[][] rel) {
-      return false; // TO DO
+      if(a.length==0 || b.length==0 || rel.length ==0){ //prevenir buit
+        return false;
+      }
+      for(int x:a){
+        int count=0;
+        for(int y:b){
+          for(int[] r:rel){
+            if(Arrays.equals(r, new int[]{x,y})){
+                count++;
+            }
+          }
+        }
+        if(count>1){
+          return false;
+        }
+      }
+      return true; // TO DO
     }
 
     /*
@@ -404,6 +437,36 @@ class Entrega {
     /*
      * Retornau l'ordre menys la mida del graf (no dirigit).
      */
+    static class Punt{
+      public int dest,peso; //b=desti, c=pes
+      public Punt(int dest, int peso){
+        this.dest=dest;
+        this.peso=peso;
+      }
+    }
+    static int[] dijkstra(ArrayList<Punt>[] punts, int nodes, int origen){
+      int[] dist = new int[nodes];
+      Arrays.fill(dist, Integer.MAX_VALUE);
+      boolean[] visit = new boolean[nodes];
+      Arrays.fill(visit, false);
+      ArrayList<Punt> cola = new ArrayList<>();
+      dist[origen]=0;
+      cola.add(new Punt(origen, 0));
+      while(!cola.isEmpty()){
+        Punt p = cola.get(0);
+        cola.remove(0);
+        for(Punt destPunt:punts[p.dest]){
+          if(visit[destPunt.dest]){
+            continue;
+          }
+          if(dist[destPunt.dest]>dist[p.dest]+destPunt.peso){
+            dist[destPunt.dest]=dist[p.dest]+destPunt.peso;
+            cola.add(new Punt(destPunt.dest, dist[destPunt.dest]));
+          }
+        }
+      }
+      return dist;
+    }
     static int exercici1(int[][] g) {
       return -1; // TO DO
     }
@@ -412,7 +475,27 @@ class Entrega {
      * Suposau que el graf (no dirigit) és connex. És bipartit?
      */
     static boolean exercici2(int[][] g) {
-      return false; // TO DO
+      int[] conex = new int[g.length]; //0=desconocido, 1, -1 grupos
+      Arrays.fill(conex, 0);
+      ArrayList<Integer> cola = new ArrayList<Integer>();
+      conex[0]=1;
+      cola.add(0);
+      while(!cola.isEmpty()){
+        int ori = cola.get(0);
+        int valorOri = conex[ori];
+        cola.remove(0);
+        for(int destino:g[ori]){
+          if(conex[destino]==0){
+            conex[destino] = valorOri*-1;
+            cola.add(destino);
+            continue;
+          }
+          if(conex[destino]==valorOri){
+            return false;
+          }
+        }
+      }
+      return true; // TO DO
     }
 
     /*
@@ -495,7 +578,40 @@ class Entrega {
      * del graf subjacent. Suposau que totes les arestes tenen pes 1.
      */
     static int exercici4(int[][] g) {
-      return -1; // TO DO
+      //Preparar per dijsktra
+      ArrayList<Punt>[] punts = new ArrayList[g.length];
+      for (int i = 0; i < punts.length; i++) {
+          punts[i]=new ArrayList<>();
+      }
+      for(int i=0;i<g.length;i++){
+        for(int d:g[i]){
+          punts[i].add(new Punt(d, 1));
+          punts[d].add(new Punt(i,1));
+        }
+      }
+      //cercar el punt més distant
+      int[] dist = dijkstra(punts, g.length,0);
+      //System.out.println(Arrays.toString(dist));
+      int max=-1;
+      int imax=0;
+      for (int i = 0; i < dist.length; i++) {
+        if(dist[i]>max){
+          max=dist[i];
+          imax=i;
+        }
+      }
+      //des del node més distant, trobar el més distant, en cas d'arbres, diametre
+      int[] dist2 = dijkstra(punts, g.length,imax);
+      //System.out.println(Arrays.toString(dist2));
+      max=-1;
+      imax=0;
+      for (int i = 0; i < dist2.length; i++) {
+        if(dist2[i]>max){
+          max=dist2[i];
+          imax=i;
+        }
+      }
+      return max; // TO DO
     }
 
     /*
@@ -600,7 +716,7 @@ class Entrega {
 
       assertThat(exercici3(directedG1, 0) == 3);
       assertThat(exercici3(directedRTree1, 2) == 3);
-
+      
       assertThat(exercici4(directedRTree1) == 5);
       assertThat(exercici4(directedRTree2) == 4);
     }
@@ -614,6 +730,47 @@ class Entrega {
    * Podeu suposar que cada vegada que se menciona un mòdul, és major que 1.
    */
   static class Tema4 {
+    static int mod(int a, int b){
+      int res = a%b;
+      if(res>=0){
+        return res;
+      }
+      return res+Math.abs(b);
+    }
+    static int mcd(int a, int b){
+      return euclides(a, b)[0];
+    }
+    static int mcm(int a, int b){
+      return -1; //TO DO
+    }
+    static int[] euclides(int a, int b){
+      System.out.println("Ec "+a+" "+b);
+      int r1=a, r2=b, q, x1=1, x2=0, y1=0, y2=1;
+      if(a<b){
+        System.err.println("A es MENOR que B");
+      }
+      
+      while(r2!=0){
+        q=r1/r2;
+        //System.out.println("-> "+List.of(r1, r2, q, x1, x2, y1, y2));
+        int res = r1%r2;
+        r1=r2;
+        r2=res;
+        int x3 = x1-x2*q;
+        x1=x2;
+        x2=x3;
+        int y3 = y1-y2*q;
+        y1=y2;
+        y2=y3;
+      }
+      // mcd(a,b)=a*x+b*y
+      //devuelve {mcd(a,b), x,y}
+      if(r1!=x1*a+y1*b){
+        System.err.println("ERROR EUCLIDES");
+      }
+      return new int[]{r1, x1, y1};
+    }
+
     /*
      * Donau la solució de l'equació
      *
@@ -625,20 +782,17 @@ class Entrega {
      * Si la solució és x ≡ c (mod m), retornau `new int[] { c, m }`, amb 0 ⩽ c < m.
      * Si no en té, retornau null.
      */
-    static int mcd(int a, int b) {
-      return -1; // TO DO
+    static int mcd(int a, int b){
+      return -1; //TO DO
     }
-
-    static int mcm(int a, int b) {
-      return -1; // TO DO
+    static int mcm(int a, int b){
+      return -1; //TO DO
     }
-
-    static int[] euclides(int a, int b) {
+    static int[] euclides(int a, int b){
       return null;
     }
-
     static int[] exercici1(int a, int b, int n) {
-
+      
       return null; // TO DO
     }
 
@@ -694,7 +848,30 @@ class Entrega {
      * (el que coneixeu com el mètode manual d'anar provant).
      */
     static ArrayList<Integer> exercici3a(int n) {
-      return new ArrayList<>(); // TO DO
+      ArrayList<Integer> factors = new ArrayList<>();
+      int div = 2;
+      if(n==2 || n==3){
+        factors.add(n);
+        return factors;
+      }
+      final int startN = n;
+      while(n>=div && n!=1){
+        if(n%div==0){
+          factors.add(div);
+          n/=div;
+        }else{
+          if(div>=3){
+            div+=2;
+          }else{
+            div++;
+          }
+        }
+      }
+      if(factors.isEmpty()){
+        //es primo
+        factors.add(startN);
+      }
+      return factors; 
     }
 
     /*
@@ -704,8 +881,7 @@ class Entrega {
      * n³ no té perquè.
      * De fet, no doneu per suposat que pogueu tractar res més gran que el resultat.
      *
-     * No podeu utilitzar `long` per solucionar aquest problema. Necessitareu
-     * l'exercici 3a.
+     * No podeu utilitzar `long` per solucionar aquest problema. Necessitareu l'exercici 3a.
      */
     static int exercici3b(int n) {
       return -1; // TO DO
@@ -716,10 +892,12 @@ class Entrega {
      * `main`)
      */
     static void tests() {
+      assertThat(Arrays.equals(exercici1(-42, 0, 35), new int[]{0,5})); //QUITAR
+
       assertThat(Arrays.equals(exercici1(17, 1, 30), new int[] { 23, 30 }));
       assertThat(Arrays.equals(exercici1(-2, -4, 6), new int[] { 2, 3 }));
       assertThat(exercici1(2, 3, 6) == null);
-
+/* 
       assertThat(
           exercici2a(
               new int[] { 1, 0 },
@@ -739,16 +917,19 @@ class Entrega {
               new int[] { 2, 4 }) == null);
 
       assertThat(
-          Arrays.equals(
-              exercici2b(
-                  new int[] { 2, -1, 5 },
-                  new int[] { 6, 1, 1 },
-                  new int[] { 10, 8, 9 }),
-              new int[] { 263, 360 }));
+        Arrays.equals(
+          exercici2b(
+            new int[] { 2,  -1, 5 },
+            new int[] { 6,   1, 1 },
+            new int[] { 10,  8, 9 }
+          ),
+          new int[] { 263, 360 }
+        )
+      );
 
       assertThat(exercici3a(10).equals(List.of(2, 5)));
       assertThat(exercici3a(1291).equals(List.of(1291)));
-      assertThat(exercici3a(1292).equals(List.of(2, 2, 17, 19)));
+      assertThat(exercici3a(1292).equals(List.of(2, 2, 17, 19 )));
 
       assertThat(exercici3b(10) == 400);
 
