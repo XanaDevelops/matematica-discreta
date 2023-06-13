@@ -481,7 +481,17 @@ class Entrega {
     }
 
     static int exercici1(int[][] g) {
-      return -1; // TO DO
+      int mida = 0;
+        int ordre = 0;
+        for (int i = 0; i < g.length; i++) {
+            for (int j = 0; j < g[i].length; j++) {
+             if(i<g[i][j]){
+                 mida++;
+             }
+            }
+            ordre++;
+        }
+        return ordre-mida;
     }
 
     /*
