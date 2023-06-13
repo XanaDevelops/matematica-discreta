@@ -788,7 +788,7 @@ class Entrega {
     }
 
     static int mcm(int a, int b) {
-      return -1; // TO DO
+      return (a*b)/mcd(a,b);
     }
 
     static int[] euclides(int a, int b) {
