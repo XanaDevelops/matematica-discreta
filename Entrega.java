@@ -334,7 +334,44 @@ class Entrega {
      * Podeu suposar que `dom` i `codom` estàn ordenats de menor a major.
      */
     static int exercici4(int[] dom, int[] codom, Function<Integer, Integer> f) {
-      return -1; // TO DO
+      int[] comptImatges = new int[codom.length];
+      int resultat = 0;
+      for (int i = 0; i < dom.length; i++) {
+        for (int j = 0; j < codom.length; j++) {
+          if (f.apply(dom[i]) == codom[j]) {
+            comptImatges[j]++;
+          }
+        }
+      }
+
+      boolean exhaustiva = true;
+      int max = 0;
+      for (int i = 0; exhaustiva && i < comptImatges.length; i++) {
+        if (comptImatges[i] > max) {
+          max = comptImatges[i];
+        }
+        exhaustiva = comptImatges[i] != 0;
+      }
+
+      if (!exhaustiva) {
+        boolean injectiva = true;
+        int cardinalIm = 0;
+        for (int i = 0; injectiva && i < comptImatges.length; i++) {
+          if (comptImatges[i] > 0) {
+            cardinalIm++;
+          }
+          injectiva = !(comptImatges[i] > 1); 
+        }
+
+        if(injectiva) {
+          resultat = cardinalIm - codom.length;
+        }
+
+      } else {
+        resultat = max;
+      }
+
+      return resultat;
     }
 
     /*
@@ -761,7 +798,7 @@ class Entrega {
     }
 
     static int mcm(int a, int b) {
-      return -1; // TO DO
+      return (a*b)/mcd(a,b);
     }
 
     static int[] euclides(int a, int b) {
