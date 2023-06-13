@@ -481,9 +481,24 @@ class Entrega {
    * Podeu suposar que cap dels grafs té llaços.
    */
   static class Tema3 {
+    
     /*
      * Retornau l'ordre menys la mida del graf (no dirigit).
      */
+    static int exercici1(int[][] g) {
+      int mida = 0;
+        int ordre = 0;
+        for (int i = 0; i < g.length; i++) {
+            for (int j = 0; j < g[i].length; j++) {
+             if(i<g[i][j]){
+                 mida++;
+             }
+            }
+            ordre++;
+        }
+        return ordre-mida;
+    }
+    
     static class Punt {
       public int dest, peso; // b=desti, c=pes
 
@@ -517,19 +532,6 @@ class Entrega {
       return dist;
     }
 
-    static int exercici1(int[][] g) {
-      int mida = 0;
-        int ordre = 0;
-        for (int i = 0; i < g.length; i++) {
-            for (int j = 0; j < g[i].length; j++) {
-             if(i<g[i][j]){
-                 mida++;
-             }
-            }
-            ordre++;
-        }
-        return ordre-mida;
-    }
 
     /*
      * Suposau que el graf (no dirigit) és connex. És bipartit?
