@@ -865,6 +865,23 @@ class Entrega {
      * Si no en té, retornau null.
      */
     static int[] exercici2a(int[] b, int[] n) {
+      boolean coprimers = true;
+      for (int i = 0; coprimers && i < n.length - 1; i++) {
+        coprimers = mcd(n[i + 1], n[i]) == 1;
+      }
+
+      boolean teSolucio = true;
+      if (!coprimers) {
+        for (int i = 0; teSolucio && i < n.length - 1; i++) {
+          teSolucio = mod(b[i + 1] - b[i], mcd(n[i + 1], n[i])) == 0;
+        }
+
+        if (teSolucio) {
+          
+        }
+
+
+      }
 
       return null; // TO DO
     }
