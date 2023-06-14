@@ -844,8 +844,22 @@ class Entrega {
      */
 
     static int[] exercici1(int a, int b, int n) {
+      int[] e;
+      e = euclides(a, n);
 
-      return null; // TO DO
+      //System.out.println(Arrays.toString(e));
+      int d = e[0];
+      if(b%d!=0){
+        System.out.println("no divide");
+        return null;
+      }
+      for (int i = 0; i < e.length; i++) {
+        e[i]*=(b/d);
+      }
+      //System.out.println(Arrays.toString(e));
+      int[] r = new int[]{mod(e[1],n/d), Math.abs(n/d)};
+      //System.out.println("r " + Arrays.toString(r));
+      return r; // CHECK
     }
 
     /*
