@@ -907,11 +907,7 @@ class Entrega {
           int[] aux = new int[3];
           int residu = mod(p[i], n[i]);
           aux = euclides(n[i], residu);
-          if (aux[3] < 0) {
-            q[i] = aux[3] * -1;
-          } else {
-            q[i] = aux[3];
-          }
+          q[i] = aux[2];
         }
 
         int sumatori = 0;
@@ -919,6 +915,14 @@ class Entrega {
         for (int i = 0; i < n.length; i++) {
           sumatori += p[i] * q[i] * b[i];
           productori *= n[i];
+        }
+
+        while (sumatori < 0) {
+          sumatori += productori;
+        }
+
+        while (sumatori > productori) {
+          sumatori -= productori;
         }
 
         solucio[0] = sumatori;
@@ -930,135 +934,131 @@ class Entrega {
       return solucio;
     }
 
-    /*
-     * Donau la solució (totes) del sistema d'equacions
-     *
-     * { a[0]·x ≡ b[0] (mod n[0])
-     * { a[1]·x ≡ b[1] (mod n[1])
-     * { a[2]·x ≡ b[2] (mod n[2])
-     * { ...
-     *
-     * Cada a[i] o b[i] pot ser negatiu (b[i] pot ser zero), però podeu suposar que
-     * n[i] > 1. També
-     * podeu suposar que els tres arrays tenen la mateixa longitud.
-     *
-     * Si la solució és de la forma x ≡ c (mod m), retornau `new int[] { c, m }`,
-     * amb 0 ⩽ c < m.
-     * Si no en té, retornau null.
-     */
-    static int[] exercici2b(int[] a, int[] b, int[] n) {
+  /*
+   * Donau la solució (totes) del sistema d'equacions
+   *
+   * { a[0]·x ≡ b[0] (mod n[0])
+   * { a[1]·x ≡ b[1] (mod n[1])
+   * { a[2]·x ≡ b[2] (mod n[2])
+   * { ...
+   *
+   * Cada a[i] o b[i] pot ser negatiu (b[i] pot ser zero), però podeu suposar que
+   * n[i] > 1. També
+   * podeu suposar que els tres arrays tenen la mateixa longitud.
+   *
+   * Si la solució és de la forma x ≡ c (mod m), retornau `new int[] { c, m }`,
+   * amb 0 ⩽ c < m.
+   * Si no en té, retornau null.
+   */
+  static int[] exercici2b(int[] a, int[] b, int[] n) {
 
-      return null; // TO DO
-    }
+    return null; // TO DO
+  }
 
-    /*
-     * Suposau que n > 1. Donau-ne la seva descomposició en nombres primers,
-     * ordenada de menor a
-     * major, on cada primer apareix tantes vegades com el seu ordre. Per exemple,
-     *
-     * exercici4a(300) --> new int[] { 2, 2, 3, 5, 5 }
-     *
-     * No fa falta que cerqueu algorismes avançats de factorització, podeu utilitzar
-     * la força bruta
-     * (el que coneixeu com el mètode manual d'anar provant).
-     */
-    static ArrayList<Integer> exercici3a(int n) {
-      ArrayList<Integer> factors = new ArrayList<>();
-      int div = 2;
-      if (n == 2 || n == 3) {
-        factors.add(n);
-        return factors;
-      }
-      final int startN = n;
-      while (n >= div && n != 1) {
-        if (n % div == 0) {
-          factors.add(div);
-          n /= div;
-        } else {
-          if (div >= 3) {
-            div += 2;
-          } else {
-            div++;
-          }
-        }
-      }
-      if (factors.isEmpty()) {
-        // es primo
-        factors.add(startN);
-      }
+  /*
+   * Suposau que n > 1. Donau-ne la seva descomposició en nombres primers,
+   * ordenada de menor a
+   * major, on cada primer apareix tantes vegades com el seu ordre. Per exemple,
+   *
+   * exercici4a(300) --> new int[] { 2, 2, 3, 5, 5 }
+   *
+   * No fa falta que cerqueu algorismes avançats de factorització, podeu utilitzar
+   * la força bruta
+   * (el que coneixeu com el mètode manual d'anar provant).
+   */
+  static ArrayList<Integer> exercici3a(int n) {
+    ArrayList<Integer> factors = new ArrayList<>();
+    int div = 2;
+    if (n == 2 || n == 3) {
+      factors.add(n);
       return factors;
     }
-
-    /*
-     * Retornau el nombre d'elements invertibles a Z mòdul n³.
-     *
-     * Alerta: podeu suposar que el resultat hi cap a un int (32 bits a Java), però
-     * n³ no té perquè.
-     * De fet, no doneu per suposat que pogueu tractar res més gran que el resultat.
-     *
-     * No podeu utilitzar `long` per solucionar aquest problema. Necessitareu
-     * l'exercici 3a.
-     */
-    static int exercici3b(int n) {
-      return -1; // TO DO
+    final int startN = n;
+    while (n >= div && n != 1) {
+      if (n % div == 0) {
+        factors.add(div);
+        n /= div;
+      } else {
+        if (div >= 3) {
+          div += 2;
+        } else {
+          div++;
+        }
+      }
     }
-
-    /*
-     * Aquí teniu alguns exemples i proves relacionades amb aquests exercicis (vegeu
-     * `main`)
-     */
-    static void tests() {
-      assertThat(Arrays.equals(exercici1(-42, 0, 35), new int[] { 0, 5 })); // QUITAR
-
-      assertThat(Arrays.equals(exercici1(17, 1, 30), new int[] { 23, 30 }));
-      assertThat(Arrays.equals(exercici1(-2, -4, 6), new int[] { 2, 3 }));
-      assertThat(exercici1(2, 3, 6) == null);
-
-      assertThat(
-          exercici2a(
-              new int[] { 1, 0 },
-              new int[] { 2, 4 }) == null);
-
-      assertThat(
-          Arrays.equals(
-              exercici2a(
-                  new int[] { 3, -1, 2 },
-                  new int[] { 5, 8, 9 }),
-              new int[] { 263, 360 }));
-
-      /*
-       * assertThat(
-       * exercici2b(
-       * new int[] { 1, 1 },
-       * new int[] { 1, 0 },
-       * new int[] { 2, 4 }) == null);
-       * 
-       * assertThat(
-       * Arrays.equals(
-       * exercici2b(
-       * new int[] { 2, -1, 5 },
-       * new int[] { 6, 1, 1 },
-       * new int[] { 10, 8, 9 }
-       * ),
-       * new int[] { 263, 360 }
-       * )
-       * );
-       * 
-       * assertThat(exercici3a(10).equals(List.of(2, 5)));
-       * assertThat(exercici3a(1291).equals(List.of(1291)));
-       * assertThat(exercici3a(1292).equals(List.of(2, 2, 17, 19 )));
-       * 
-       * assertThat(exercici3b(10) == 400);
-       * 
-       * // Aquí 1292³ ocupa més de 32 bits amb el signe, però es pot resoldre sense
-       * // calcular n³.
-       * assertThat(exercici3b(1292) == 961_496_064);
-       * 
-       * // Aquest exemple té el resultat fora de rang
-       * // assertThat(exercici3b(1291) == 2_150_018_490);
-       */
-
+    if (factors.isEmpty()) {
+      // es primo
+      factors.add(startN);
     }
+    return factors;
+  }
+
+  /*
+   * Retornau el nombre d'elements invertibles a Z mòdul n³.
+   *
+   * Alerta: podeu suposar que el resultat hi cap a un int (32 bits a Java), però
+   * n³ no té perquè.
+   * De fet, no doneu per suposat que pogueu tractar res més gran que el resultat.
+   *
+   * No podeu utilitzar `long` per solucionar aquest problema. Necessitareu
+   * l'exercici 3a.
+   */
+  static int exercici3b(int n) {
+    return -1; // TO DO
+  }
+
+  /*
+   * Aquí teniu alguns exemples i proves relacionades amb aquests exercicis (vegeu
+   * `main`)
+   */
+  static void tests() {
+    assertThat(Arrays.equals(exercici1(-42, 0, 35), new int[] { 0, 5 })); // QUITAR
+
+    assertThat(Arrays.equals(exercici1(17, 1, 30), new int[] { 23, 30 }));
+    assertThat(Arrays.equals(exercici1(-2, -4, 6), new int[] { 2, 3 }));
+    assertThat(exercici1(2, 3, 6) == null);
+
+    assertThat(
+        exercici2a(
+            new int[] { 1, 0 },
+            new int[] { 2, 4 }) == null);
+
+    assertThat(
+        Arrays.equals(
+            exercici2a(
+                new int[] { 3, -1, 2 },
+                new int[] { 5, 8, 9 }),
+            new int[] { 263, 360 }));
+
+     assertThat(
+        exercici2b(
+            new int[] { 1, 1 },
+            new int[] { 1, 0 },
+            new int[] { 2, 4 }) == null);
+
+    assertThat(
+        Arrays.equals(
+            exercici2b(
+                new int[] { 2, -1, 5 },
+                new int[] { 6, 1, 1 },
+                new int[] { 10, 8, 9 }),
+            new int[] { 263, 360 }));
+
+    assertThat(exercici3a(10).equals(List.of(2, 5)));
+    assertThat(exercici3a(1291).equals(List.of(1291)));
+    assertThat(exercici3a(1292).equals(List.of(2, 2, 17, 19)));
+
+    assertThat(exercici3b(10) == 400);
+
+    // Aquí 1292³ ocupa més de 32 bits amb el signe, però es pot resoldre sense
+    // calcular n³.
+    assertThat(exercici3b(1292) == 961_496_064);
+
+    // Aquest exemple té el resultat fora de rang
+    // assertThat(exercici3b(1291) == 2_150_018_490);
+
+  }
+
   }
 
   /*
