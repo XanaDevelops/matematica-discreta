@@ -871,19 +871,49 @@ class Entrega {
       }
 
       boolean teSolucio = true;
+      int[] solucio = new int[2];
       if (!coprimers) {
         for (int i = 0; teSolucio && i < n.length - 1; i++) {
           teSolucio = mod(b[i + 1] - b[i], mcd(n[i + 1], n[i])) == 0;
         }
-
-        if (teSolucio) {
-          
-        }
-
-
       }
+        if (teSolucio) {
+          int[] p = new int[n.length]; // Cercam cada Pi
+          for (int i = 0; i < p.length; i++) {
+            p[i] = 1;
+            for (int j = 0; j < n.length; j++) {
+              if (j != i) {
+                p[i] *= n[j];
+              }
+            }
+          }
 
-      return null; // TO DO
+          int[] q = new int[n.length]; // Cercam cada Qi
+          for (int i = 0; i < q.length; i++) {
+            int[] aux = new int[3];
+            int residu = mod(p[i], n[i]);
+            aux = euclides(n[i], residu);
+            if (aux[3] < 0) {
+              q[i] = aux[3] * -1;
+            } else {
+              q[i] = aux[3];
+            }
+          }
+
+          int sumatori = 0;
+          int productori = 1;
+          for (int i = 0; i < n.length; i++) {
+            sumatori += p[i] * q[i] * b[i];
+            productori *= n[i];
+          }
+
+          solucio[0] = sumatori;
+          solucio[1] = productori;
+
+        } else {
+          solucio = null;
+        }
+      return solucio;
     }
 
     /*
