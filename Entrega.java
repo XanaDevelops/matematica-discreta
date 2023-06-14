@@ -847,18 +847,18 @@ class Entrega {
       int[] e;
       e = euclides(a, n);
 
-      //System.out.println(Arrays.toString(e));
+      // System.out.println(Arrays.toString(e));
       int d = e[0];
-      if(b%d!=0){
+      if (b % d != 0) {
         System.out.println("no divide");
         return null;
       }
       for (int i = 0; i < e.length; i++) {
-        e[i]*=(b/d);
+        e[i] *= (b / d);
       }
-      //System.out.println(Arrays.toString(e));
-      int[] r = new int[]{mod(e[1],n/d), Math.abs(n/d)};
-      //System.out.println("r " + Arrays.toString(r));
+      // System.out.println(Arrays.toString(e));
+      int[] r = new int[] { mod(e[1], n / d), Math.abs(n / d) };
+      // System.out.println("r " + Arrays.toString(r));
       return r; // CHECK
     }
 
@@ -891,42 +891,42 @@ class Entrega {
           teSolucio = mod(b[i + 1] - b[i], mcd(n[i + 1], n[i])) == 0;
         }
       }
-        if (teSolucio) {
-          int[] p = new int[n.length]; // Cercam cada Pi
-          for (int i = 0; i < p.length; i++) {
-            p[i] = 1;
-            for (int j = 0; j < n.length; j++) {
-              if (j != i) {
-                p[i] *= n[j];
-              }
+      if (teSolucio) {
+        int[] p = new int[n.length]; // Cercam cada Pi
+        for (int i = 0; i < p.length; i++) {
+          p[i] = 1;
+          for (int j = 0; j < n.length; j++) {
+            if (j != i) {
+              p[i] *= n[j];
             }
           }
-
-          int[] q = new int[n.length]; // Cercam cada Qi
-          for (int i = 0; i < q.length; i++) {
-            int[] aux = new int[3];
-            int residu = mod(p[i], n[i]);
-            aux = euclides(n[i], residu);
-            if (aux[3] < 0) {
-              q[i] = aux[3] * -1;
-            } else {
-              q[i] = aux[3];
-            }
-          }
-
-          int sumatori = 0;
-          int productori = 1;
-          for (int i = 0; i < n.length; i++) {
-            sumatori += p[i] * q[i] * b[i];
-            productori *= n[i];
-          }
-
-          solucio[0] = sumatori;
-          solucio[1] = productori;
-
-        } else {
-          solucio = null;
         }
+
+        int[] q = new int[n.length]; // Cercam cada Qi
+        for (int i = 0; i < q.length; i++) {
+          int[] aux = new int[3];
+          int residu = mod(p[i], n[i]);
+          aux = euclides(n[i], residu);
+          if (aux[3] < 0) {
+            q[i] = aux[3] * -1;
+          } else {
+            q[i] = aux[3];
+          }
+        }
+
+        int sumatori = 0;
+        int productori = 1;
+        for (int i = 0; i < n.length; i++) {
+          sumatori += p[i] * q[i] * b[i];
+          productori *= n[i];
+        }
+
+        solucio[0] = sumatori;
+        solucio[1] = productori;
+
+      } else {
+        solucio = null;
+      }
       return solucio;
     }
 
@@ -1013,51 +1013,52 @@ class Entrega {
       assertThat(Arrays.equals(exercici1(17, 1, 30), new int[] { 23, 30 }));
       assertThat(Arrays.equals(exercici1(-2, -4, 6), new int[] { 2, 3 }));
       assertThat(exercici1(2, 3, 6) == null);
-    }
 
-    /*
-     * assertThat(
-     * exercici2a(
-     * new int[] { 1, 0 },
-     * new int[] { 2, 4 }) == null);
-     * 
-     * assertThat(
-     * Arrays.equals(
-     * exercici2a(
-     * new int[] { 3, -1, 2 },
-     * new int[] { 5, 8, 9 }),
-     * new int[] { 263, 360 }));
-     * 
-     * assertThat(
-     * exercici2b(
-     * new int[] { 1, 1 },
-     * new int[] { 1, 0 },
-     * new int[] { 2, 4 }) == null);
-     * 
-     * assertThat(
-     * Arrays.equals(
-     * exercici2b(
-     * new int[] { 2, -1, 5 },
-     * new int[] { 6, 1, 1 },
-     * new int[] { 10, 8, 9 }
-     * ),
-     * new int[] { 263, 360 }
-     * )
-     * );
-     * 
-     * assertThat(exercici3a(10).equals(List.of(2, 5)));
-     * assertThat(exercici3a(1291).equals(List.of(1291)));
-     * assertThat(exercici3a(1292).equals(List.of(2, 2, 17, 19 )));
-     * 
-     * assertThat(exercici3b(10) == 400);
-     * 
-     * // Aquí 1292³ ocupa més de 32 bits amb el signe, però es pot resoldre sense
-     * // calcular n³.
-     * assertThat(exercici3b(1292) == 961_496_064);
-     * 
-     * // Aquest exemple té el resultat fora de rang
-     * // assertThat(exercici3b(1291) == 2_150_018_490);
-     */
+      assertThat(
+          exercici2a(
+              new int[] { 1, 0 },
+              new int[] { 2, 4 }) == null);
+
+      assertThat(
+          Arrays.equals(
+              exercici2a(
+                  new int[] { 3, -1, 2 },
+                  new int[] { 5, 8, 9 }),
+              new int[] { 263, 360 }));
+
+      /*
+       * assertThat(
+       * exercici2b(
+       * new int[] { 1, 1 },
+       * new int[] { 1, 0 },
+       * new int[] { 2, 4 }) == null);
+       * 
+       * assertThat(
+       * Arrays.equals(
+       * exercici2b(
+       * new int[] { 2, -1, 5 },
+       * new int[] { 6, 1, 1 },
+       * new int[] { 10, 8, 9 }
+       * ),
+       * new int[] { 263, 360 }
+       * )
+       * );
+       * 
+       * assertThat(exercici3a(10).equals(List.of(2, 5)));
+       * assertThat(exercici3a(1291).equals(List.of(1291)));
+       * assertThat(exercici3a(1292).equals(List.of(2, 2, 17, 19 )));
+       * 
+       * assertThat(exercici3b(10) == 400);
+       * 
+       * // Aquí 1292³ ocupa més de 32 bits amb el signe, però es pot resoldre sense
+       * // calcular n³.
+       * assertThat(exercici3b(1292) == 961_496_064);
+       * 
+       * // Aquest exemple té el resultat fora de rang
+       * // assertThat(exercici3b(1291) == 2_150_018_490);
+       */
+
+    }
   }
 
   /*
