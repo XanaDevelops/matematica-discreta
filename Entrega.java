@@ -921,7 +921,7 @@ class Entrega {
           sumatori += productori;
         }
 
-        while (sumatori > productori) {
+        while (sumatori >= productori) {
           sumatori -= productori;
         }
 
