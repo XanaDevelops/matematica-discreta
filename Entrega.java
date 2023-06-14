@@ -110,25 +110,26 @@ class Entrega {
      */
     static boolean exercici3(int[] universe, BiPredicate<Integer, Integer> p, BiPredicate<Integer, Integer> q) {
 
-      if(universe.length==0){
-            return false;
-        }
-        for (int x : universe) {
-            for (int y : universe) {
-                boolean xor = true;
-                for (int z : universe) {
-                    if (!(p.test(x, z) ^ q.test(y, z))) {
-                        xor = false;
-                        break;
-                    }
-                }
-                if (xor) {
-                    return true;
-                }
-            }
-        }
+      if (universe.length == 0) {
         return false;
       }
+      for (int x : universe) {
+        for (int y : universe) {
+          boolean xor = true;
+          for (int z : universe) {
+            if (!(p.test(x, z) ^ q.test(y, z))) {
+              xor = false;
+              break;
+            }
+          }
+          if (xor) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
     /*
      * És cert que (∀x. P(x)) -> (∀x. Q(x)) ?
      */
@@ -141,8 +142,8 @@ class Entrega {
       if (!contraexempleP) {
         for (int i = 0; !contraexempleQ && i < universe.length; i++) {
           contraexempleQ = q.test(universe[i]);
+        }
       }
-    }
       return (contraexempleP || !contraexempleQ);
     }
 
@@ -360,10 +361,10 @@ class Entrega {
           if (comptImatges[i] > 0) {
             cardinalIm++;
           }
-          injectiva = !(comptImatges[i] > 1); 
+          injectiva = !(comptImatges[i] > 1);
         }
 
-        if(injectiva) {
+        if (injectiva) {
           resultat = cardinalIm - codom.length;
         }
 
@@ -481,24 +482,24 @@ class Entrega {
    * Podeu suposar que cap dels grafs té llaços.
    */
   static class Tema3 {
-    
+
     /*
      * Retornau l'ordre menys la mida del graf (no dirigit).
      */
     static int exercici1(int[][] g) {
       int mida = 0;
-        int ordre = 0;
-        for (int i = 0; i < g.length; i++) {
-            for (int j = 0; j < g[i].length; j++) {
-             if(i<g[i][j]){
-                 mida++;
-             }
-            }
-            ordre++;
+      int ordre = 0;
+      for (int i = 0; i < g.length; i++) {
+        for (int j = 0; j < g[i].length; j++) {
+          if (i < g[i][j]) {
+            mida++;
+          }
         }
-        return ordre-mida;
+        ordre++;
+      }
+      return ordre - mida;
     }
-    
+
     static class Punt {
       public int dest, peso; // b=desti, c=pes
 
@@ -531,7 +532,6 @@ class Entrega {
       }
       return dist;
     }
-
 
     /*
      * Suposau que el graf (no dirigit) és connex. És bipartit?
@@ -800,7 +800,7 @@ class Entrega {
     }
 
     static int mcm(int a, int b) {
-      return (a*b)/mcd(a,b);
+      return (a * b) / mcd(a, b);
     }
 
     static int[] euclides(int a, int b) {
@@ -865,6 +865,7 @@ class Entrega {
      * Si no en té, retornau null.
      */
     static int[] exercici2a(int[] b, int[] n) {
+
       return null; // TO DO
     }
 
@@ -885,6 +886,7 @@ class Entrega {
      * Si no en té, retornau null.
      */
     static int[] exercici2b(int[] a, int[] b, int[] n) {
+
       return null; // TO DO
     }
 
