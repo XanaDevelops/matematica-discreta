@@ -627,7 +627,7 @@ class Entrega {
 
       ArrayList<Integer> cola = new ArrayList<Integer>();
       conex[0] = 1;
-      
+
       cola.add(0);
       while (!cola.isEmpty()) {
         int ori = cola.get(0);
@@ -873,6 +873,16 @@ class Entrega {
         {0}
       };
 
+      final int[][] directedRTree3 = {
+        {1,2},
+        {3,4},
+        {5,6},
+        {},
+        {},
+        {},
+        {}
+      };
+
       assertThat(exercici1(undirectedK6) == 6 - 5 * 6 / 2);
       assertThat(exercici1(undirectedW4) == 5 - 2 * 4);
 
@@ -889,6 +899,7 @@ class Entrega {
 
       assertThat(exercici4(directedRTree1) == 5);
       assertThat(exercici4(directedRTree2) == 4);
+      assertThat(exercici4(directedRTree3) == 4);
     }
   }
 
