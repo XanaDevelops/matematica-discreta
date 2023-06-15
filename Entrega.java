@@ -325,7 +325,8 @@ class Entrega {
         }
       }
 
-      // És una relació d'equivalència si i només si és reflexiva, simètrica i transitiva
+      // És una relació d'equivalència si i només si és reflexiva, simètrica i
+      // transitiva
       return (reflexiva && simetrica && transitiva);
     }
 
@@ -376,33 +377,43 @@ class Entrega {
      * Podeu suposar que `dom` i `codom` estàn ordenats de menor a major.
      */
     static int exercici4(int[] dom, int[] codom, Function<Integer, Integer> f) {
-      int[] comptImatges = new int[codom.length];
+      int[] comptImatges = new int[codom.length]; // Array on cada índex correspon al nombre d'elements del domini que van a
+                                                  // parar a l'element del mateix índex del codomini quan se'ls aplica f.                                           
+                                                  
       int resultat = 0;
-      for (int i = 0; i < dom.length; i++) {
-        for (int j = 0; j < codom.length; j++) {
-          if (f.apply(dom[i]) == codom[j]) {
+      for (int i : dom) {
+        for (int j : codom) {
+          if (f.apply(i) == j) {
             comptImatges[j]++;
           }
         }
       }
 
-      boolean exhaustiva = true;
+      boolean exhaustiva = true; // Comprovam si és exhaustiva
       int max = 0;
-      for (int i = 0; exhaustiva && i < comptImatges.length; i++) {
-        if (comptImatges[i] > max) {
-          max = comptImatges[i];
+      for (int i : comptImatges) { // Cercam el número d'antiimatges de l'element del codomini amb més antiimatges
+        if (i > max) {
+          max = i;
         }
-        exhaustiva = comptImatges[i] != 0;
+        exhaustiva = i != 0; // Si algun comptador està a 0, algun element del codomini no prové del domini i
+                             // no és exhaustiva
+        if (!exhaustiva) {
+          break;
+        }
       }
 
       if (!exhaustiva) {
-        boolean injectiva = true;
+        boolean injectiva = true; // Si no és exhaustiva, comprovam si és injectiva
         int cardinalIm = 0;
-        for (int i = 0; injectiva && i < comptImatges.length; i++) {
-          if (comptImatges[i] > 0) {
+        for (int i : comptImatges) { // Comptam els elements del domini que tenen imatge en el codomini
+          if (i > 0) {
             cardinalIm++;
           }
-          injectiva = !(comptImatges[i] > 1);
+          injectiva = !(i > 1); // Si algun element del codomini té més d'una antiimatge dins el domini, no és injectiva.
+ 
+          if (!injectiva) {
+            break;
+          }
         }
 
         if (injectiva) {
