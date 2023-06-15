@@ -346,9 +346,16 @@ class Entrega {
      * Podeu soposar que `a` i `b` estan ordenats de menor a major.
      */
     static boolean exercici3(int[] a, int[] b, int[][] rel) {
-      if (a.length == 0 || b.length == 0 || rel.length == 0) { // prevenir buit
+      //∀a ∈ A : ∃!b ∈ B : (a, b) ∈ Γf
+      if(a.length==0){
+        return true;
+      }
+      if (b.length == 0 || rel.length == 0) { // prevenir buit
         return false;
       }
+      //System.out.println("---");
+      //System.out.println(Arrays.toString(a));
+      //System.out.println(Arrays.toString(b));
       //System.out.println(Arrays.deepToString(rel));
       for (int x : a) {
         int count = 0;
