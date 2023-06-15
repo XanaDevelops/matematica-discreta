@@ -90,19 +90,40 @@ class Entrega {
      * És cert que ∃!x ∀y. P(y) -> Q(x,y) ?
      */
     static boolean exercici2(int[] universe, Predicate<Integer> p, BiPredicate<Integer, Integer> q) {
-      int co = 0;
-      for (int i = 0; i < universe.length; i++) {
-        boolean trobat = false;
-        for (int j = 0; !trobat && j < universe.length; j++) {
-          if (p.test(universe[j]) && !q.test(universe[i], universe[j])) {
-            trobat = true;
+      boolean buit = universe.length == 0; // Comprovam si l'univers és buit
+      boolean solucio;
+      if (!buit) { // Si l'univers no és buit, continuam
+        boolean premisa = false;
+        for (int y : universe) { // Comprovam si la premisa és certa en algun cas
+          premisa = p.test(y);
+          if (premisa) {
+            break;
           }
         }
-        if (!trobat) {
-          co++;
+
+        if (premisa) { // Si la premisa és vertadera en algun cas, miram si es compleix la implicació
+          int co = 0;
+          for (int x : universe) {
+            boolean trobat = false;
+            for (int y : universe) {
+              if (p.test(y) && !q.test(x, y)) { // Cercam casos on la implicació sigui falsa
+                trobat = true;
+                break;
+              }
+            }
+            if (!trobat) { // Si per tot y la implicació és certa, augmentam el comptador
+              co++;
+            }
+          }
+          solucio = co == 1; //La proposició és certa només si s'ha complert per un sol x
+        } else { // Si la premisa és sempre falsa, la proposició sempre és vertadera
+          solucio = true;
         }
+      } else {
+        solucio = false; // Si l'univers és buit, el quantificador existencial sempre és fals
       }
-      return co == 1;
+
+      return solucio;
     }
 
     /*
@@ -934,130 +955,130 @@ class Entrega {
       return solucio;
     }
 
-  /*
-   * Donau la solució (totes) del sistema d'equacions
-   *
-   * { a[0]·x ≡ b[0] (mod n[0])
-   * { a[1]·x ≡ b[1] (mod n[1])
-   * { a[2]·x ≡ b[2] (mod n[2])
-   * { ...
-   *
-   * Cada a[i] o b[i] pot ser negatiu (b[i] pot ser zero), però podeu suposar que
-   * n[i] > 1. També
-   * podeu suposar que els tres arrays tenen la mateixa longitud.
-   *
-   * Si la solució és de la forma x ≡ c (mod m), retornau `new int[] { c, m }`,
-   * amb 0 ⩽ c < m.
-   * Si no en té, retornau null.
-   */
-  static int[] exercici2b(int[] a, int[] b, int[] n) {
+    /*
+     * Donau la solució (totes) del sistema d'equacions
+     *
+     * { a[0]·x ≡ b[0] (mod n[0])
+     * { a[1]·x ≡ b[1] (mod n[1])
+     * { a[2]·x ≡ b[2] (mod n[2])
+     * { ...
+     *
+     * Cada a[i] o b[i] pot ser negatiu (b[i] pot ser zero), però podeu suposar que
+     * n[i] > 1. També
+     * podeu suposar que els tres arrays tenen la mateixa longitud.
+     *
+     * Si la solució és de la forma x ≡ c (mod m), retornau `new int[] { c, m }`,
+     * amb 0 ⩽ c < m.
+     * Si no en té, retornau null.
+     */
+    static int[] exercici2b(int[] a, int[] b, int[] n) {
 
-    return null; // TO DO
-  }
-
-  /*
-   * Suposau que n > 1. Donau-ne la seva descomposició en nombres primers,
-   * ordenada de menor a
-   * major, on cada primer apareix tantes vegades com el seu ordre. Per exemple,
-   *
-   * exercici4a(300) --> new int[] { 2, 2, 3, 5, 5 }
-   *
-   * No fa falta que cerqueu algorismes avançats de factorització, podeu utilitzar
-   * la força bruta
-   * (el que coneixeu com el mètode manual d'anar provant).
-   */
-  static ArrayList<Integer> exercici3a(int n) {
-    ArrayList<Integer> factors = new ArrayList<>();
-    int div = 2;
-    if (n == 2 || n == 3) {
-      factors.add(n);
-      return factors;
+      return null; // TO DO
     }
-    final int startN = n;
-    while (n >= div && n != 1) {
-      if (n % div == 0) {
-        factors.add(div);
-        n /= div;
-      } else {
-        if (div >= 3) {
-          div += 2;
+
+    /*
+     * Suposau que n > 1. Donau-ne la seva descomposició en nombres primers,
+     * ordenada de menor a
+     * major, on cada primer apareix tantes vegades com el seu ordre. Per exemple,
+     *
+     * exercici4a(300) --> new int[] { 2, 2, 3, 5, 5 }
+     *
+     * No fa falta que cerqueu algorismes avançats de factorització, podeu utilitzar
+     * la força bruta
+     * (el que coneixeu com el mètode manual d'anar provant).
+     */
+    static ArrayList<Integer> exercici3a(int n) {
+      ArrayList<Integer> factors = new ArrayList<>();
+      int div = 2;
+      if (n == 2 || n == 3) {
+        factors.add(n);
+        return factors;
+      }
+      final int startN = n;
+      while (n >= div && n != 1) {
+        if (n % div == 0) {
+          factors.add(div);
+          n /= div;
         } else {
-          div++;
+          if (div >= 3) {
+            div += 2;
+          } else {
+            div++;
+          }
         }
       }
+      if (factors.isEmpty()) {
+        // es primo
+        factors.add(startN);
+      }
+      return factors;
     }
-    if (factors.isEmpty()) {
-      // es primo
-      factors.add(startN);
+
+    /*
+     * Retornau el nombre d'elements invertibles a Z mòdul n³.
+     *
+     * Alerta: podeu suposar que el resultat hi cap a un int (32 bits a Java), però
+     * n³ no té perquè.
+     * De fet, no doneu per suposat que pogueu tractar res més gran que el resultat.
+     *
+     * No podeu utilitzar `long` per solucionar aquest problema. Necessitareu
+     * l'exercici 3a.
+     */
+    static int exercici3b(int n) {
+      return -1; // TO DO
     }
-    return factors;
-  }
 
-  /*
-   * Retornau el nombre d'elements invertibles a Z mòdul n³.
-   *
-   * Alerta: podeu suposar que el resultat hi cap a un int (32 bits a Java), però
-   * n³ no té perquè.
-   * De fet, no doneu per suposat que pogueu tractar res més gran que el resultat.
-   *
-   * No podeu utilitzar `long` per solucionar aquest problema. Necessitareu
-   * l'exercici 3a.
-   */
-  static int exercici3b(int n) {
-    return -1; // TO DO
-  }
+    /*
+     * Aquí teniu alguns exemples i proves relacionades amb aquests exercicis (vegeu
+     * `main`)
+     */
+    static void tests() {
+      assertThat(Arrays.equals(exercici1(-42, 0, 35), new int[] { 0, 5 })); // QUITAR
 
-  /*
-   * Aquí teniu alguns exemples i proves relacionades amb aquests exercicis (vegeu
-   * `main`)
-   */
-  static void tests() {
-    assertThat(Arrays.equals(exercici1(-42, 0, 35), new int[] { 0, 5 })); // QUITAR
+      assertThat(Arrays.equals(exercici1(17, 1, 30), new int[] { 23, 30 }));
+      assertThat(Arrays.equals(exercici1(-2, -4, 6), new int[] { 2, 3 }));
+      assertThat(exercici1(2, 3, 6) == null);
 
-    assertThat(Arrays.equals(exercici1(17, 1, 30), new int[] { 23, 30 }));
-    assertThat(Arrays.equals(exercici1(-2, -4, 6), new int[] { 2, 3 }));
-    assertThat(exercici1(2, 3, 6) == null);
+      assertThat(
+          exercici2a(
+              new int[] { 1, 0 },
+              new int[] { 2, 4 }) == null);
 
-    assertThat(
-        exercici2a(
-            new int[] { 1, 0 },
-            new int[] { 2, 4 }) == null);
+      assertThat(
+          Arrays.equals(
+              exercici2a(
+                  new int[] { 3, -1, 2 },
+                  new int[] { 5, 8, 9 }),
+              new int[] { 263, 360 }));
 
-    assertThat(
-        Arrays.equals(
-            exercici2a(
-                new int[] { 3, -1, 2 },
-                new int[] { 5, 8, 9 }),
-            new int[] { 263, 360 }));
+      assertThat(
+          exercici2b(
+              new int[] { 1, 1 },
+              new int[] { 1, 0 },
+              new int[] { 2, 4 }) == null);
 
-     assertThat(
-        exercici2b(
-            new int[] { 1, 1 },
-            new int[] { 1, 0 },
-            new int[] { 2, 4 }) == null);
+      assertThat(
+          Arrays.equals(
+              exercici2b(
+                  new int[] { 2, -1, 5 },
+                  new int[] { 6, 1, 1 },
+                  new int[] { 10, 8, 9 }),
+              new int[] { 263, 360 }));
 
-    assertThat(
-        Arrays.equals(
-            exercici2b(
-                new int[] { 2, -1, 5 },
-                new int[] { 6, 1, 1 },
-                new int[] { 10, 8, 9 }),
-            new int[] { 263, 360 }));
+      assertThat(exercici3a(10).equals(List.of(2, 5)));
+      assertThat(exercici3a(1291).equals(List.of(1291)));
+      assertThat(exercici3a(1292).equals(List.of(2, 2, 17, 19)));
 
-    assertThat(exercici3a(10).equals(List.of(2, 5)));
-    assertThat(exercici3a(1291).equals(List.of(1291)));
-    assertThat(exercici3a(1292).equals(List.of(2, 2, 17, 19)));
+      assertThat(exercici3b(10) == 400);
 
-    assertThat(exercici3b(10) == 400);
+      // Aquí 1292³ ocupa més de 32 bits amb el signe, però es pot resoldre sense
+      // calcular n³.
+      assertThat(exercici3b(1292) == 961_496_064);
 
-    // Aquí 1292³ ocupa més de 32 bits amb el signe, però es pot resoldre sense
-    // calcular n³.
-    assertThat(exercici3b(1292) == 961_496_064);
+      // Aquest exemple té el resultat fora de rang
+      // assertThat(exercici3b(1291) == 2_150_018_490);
 
-    // Aquest exemple té el resultat fora de rang
-    // assertThat(exercici3b(1291) == 2_150_018_490);
-
-  }
+    }
 
   }
 
