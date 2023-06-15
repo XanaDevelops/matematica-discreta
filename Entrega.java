@@ -1408,7 +1408,7 @@ public static int phi(int n) {
                   new int[] { 5, 8, 9 }),
               new int[] { 263, 360 }));
 
-      /*
+      
       assertThat(
           exercici2b(
               new int[] { 1, 1 },
@@ -1422,7 +1422,7 @@ public static int phi(int n) {
                   new int[] { 6, 1, 1 },
                   new int[] { 10, 8, 9 }),
               new int[] { 263, 360 }));
-        */
+        
       assertThat(exercici3a(10).equals(List.of(2, 5)));
       assertThat(exercici3a(1291).equals(List.of(1291)));
       assertThat(exercici3a(1292).equals(List.of(2, 2, 17, 19)));
@@ -1440,7 +1440,7 @@ public static int phi(int n) {
       assertThat(exercici3b(1292) == 961_496_064);
 
       // Aquest exemple té el resultat fora de rang
-      // assertThat(exercici3b(1291) == 2_150_018_490);
+      //assertThat(exercici3b(1291) == 2_150_018_490L);
 
     }
 
