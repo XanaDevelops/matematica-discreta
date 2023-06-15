@@ -115,7 +115,7 @@ class Entrega {
               co++;
             }
           }
-          solucio = co == 1; //La proposició és certa només si s'ha complert per un sol x
+          solucio = co == 1; // La proposició és certa només si s'ha complert per un sol x
         } else { // Si la premisa és sempre falsa, la proposició sempre és vertadera
           solucio = true;
         }
@@ -156,13 +156,22 @@ class Entrega {
      */
     static boolean exercici4(int[] universe, Predicate<Integer> p, Predicate<Integer> q) {
       boolean contraexempleP = false;
-      for (int i = 0; !contraexempleP && i < universe.length; i++) {
-        contraexempleP = !p.test(universe[i]);
+      for (int x : universe) { // Comprovam si per tot x es compleix P(x)
+        contraexempleP = !p.test(x);
+        if (contraexempleP) { // Si per algun x no es compleix P(x), aleshores
+          break; // la premisa és falsa i la implicació és sempre certa.
+        }
       }
-      boolean contraexempleQ = false;
-      if (!contraexempleP) {
-        for (int i = 0; !contraexempleQ && i < universe.length; i++) {
-          contraexempleQ = q.test(universe[i]);
+
+      boolean contraexempleQ = false; // Si l'univers és buit, aquest valor prevaldrà i la
+                                      // proposició serà sempre certa per al quantificador universal.
+
+      if (!contraexempleP) { // Comprovam si per tot x es compleix Q(x)
+        for (int x : universe) {
+          contraexempleQ = !q.test(x);
+          if (contraexempleQ) { // Si per algun x no es compleix Q(x), aleshores la implicació és falsa
+            break;
+          }
         }
       }
       return (contraexempleP || !contraexempleQ);
@@ -264,48 +273,59 @@ class Entrega {
      * Podeu soposar que `a` està ordenat de menor a major.
      */
     static boolean exercici1(int[] a, int[][] rel) {
-      boolean reflexiva = true;
-      for (int i = 0; reflexiva && i < a.length; i++) {
+      boolean reflexiva = true; // Primer, comprovam si és reflexiva
+      for (int i : a) {
         boolean trobada = false;
-        for (int j = 0; !trobada && j < rel.length; j++) {
-          if ((rel[j][0] == a[i]) && (rel[j][1] == a[i])) {
+        for (int[] j : rel) {
+          if ((j[0] == i) && (j[1] == i)) {
             trobada = true;
+            break;
           }
         }
-        if (!trobada) {
+        if (!trobada) { // Si no existeix l'element (i, i), no és reflexiva
           reflexiva = false;
+          break;
         }
       }
 
-      boolean simetrica = true;
-      for (int i = 0; simetrica && i < rel.length; i++) {
+      boolean simetrica = true; // Segon, comprovam si és simètrica
+      for (int[] i : rel) {
         boolean trobada = false;
-        for (int j = 0; !trobada && j < rel.length; j++) {
-          if ((rel[j][0] == rel[i][1]) && (rel[j][1] == rel[i][0])) {
+        for (int[] j : rel) {
+          if ((j[0] == i[1]) && (j[1] == i[0])) {
             trobada = true;
+            break;
           }
         }
-        if (!trobada) {
+        if (!trobada) { // Si per (i, j) no existeix (j, i), no és simètrica
           simetrica = false;
+          break;
         }
       }
 
-      boolean transitiva = true;
-      for (int i = 0; transitiva && i < rel.length; i++) {
-        for (int j = 0; j < rel.length; j++) {
-          if (rel[j][0] == rel[i][1]) {
+      boolean transitiva = true; // Tercer, comprovam si és transitiva
+      for (int[] i : rel) {
+        for (int[] j : rel) {
+          if (j[0] == i[1]) {
             boolean trobada = false;
-            for (int k = 0; !trobada && k < rel.length; k++) {
-              if ((rel[k][0] == rel[i][0]) && (rel[k][1] == rel[j][1])) {
+            for (int[] k : rel) {
+              if ((k[0] == i[0]) && (k[1] == j[1])) {
                 trobada = true;
+                break;
               }
             }
-            if (!trobada) {
+            if (!trobada) { // Si existeixen (i, j) i (j, k), però no (i, k), no és transitiva
               transitiva = false;
+              break;
             }
           }
         }
+        if (!transitiva) {
+          break;
+        }
       }
+
+      // És una relació d'equivalència si i només si és reflexiva, simètrica i transitiva
       return (reflexiva && simetrica && transitiva);
     }
 
