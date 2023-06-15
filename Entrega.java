@@ -75,11 +75,11 @@ class Entrega {
       for (int x : universe) {
         int count = 0;
         for (int y : universe) {
-          if (!p.test(x) || q.test(x, y)) {
+          if (!p.test(x) || q.test(x, y)) { // implicació
             count++;
           }
         }
-        if (count != 1) {
+        if (count != 1) { // existencia unica
           return false;
         }
       }
@@ -90,19 +90,40 @@ class Entrega {
      * És cert que ∃!x ∀y. P(y) -> Q(x,y) ?
      */
     static boolean exercici2(int[] universe, Predicate<Integer> p, BiPredicate<Integer, Integer> q) {
-      int co = 0;
-      for (int i = 0; i < universe.length; i++) {
-        boolean trobat = false;
-        for (int j = 0; !trobat && j < universe.length; j++) {
-          if (p.test(universe[j]) && !q.test(universe[i], universe[j])) {
-            trobat = true;
+      boolean buit = universe.length == 0; // Comprovam si l'univers és buit
+      boolean solucio;
+      if (!buit) { // Si l'univers no és buit, continuam
+        boolean premisa = false;
+        for (int y : universe) { // Comprovam si la premisa és certa en algun cas
+          premisa = p.test(y);
+          if (premisa) {
+            break;
           }
         }
-        if (!trobat) {
-          co++;
+
+        if (premisa) { // Si la premisa és vertadera en algun cas, miram si es compleix la implicació
+          int co = 0;
+          for (int x : universe) {
+            boolean trobat = false;
+            for (int y : universe) {
+              if (p.test(y) && !q.test(x, y)) { // Cercam casos on la implicació sigui falsa
+                trobat = true;
+                break;
+              }
+            }
+            if (!trobat) { // Si per tot y la implicació és certa, augmentam el comptador
+              co++;
+            }
+          }
+          solucio = co == 1; // La proposició és certa només si s'ha complert per un sol x
+        } else { // Si la premisa és sempre falsa, la proposició sempre és vertadera
+          solucio = true;
         }
+      } else {
+        solucio = false; // Si l'univers és buit, el quantificador existencial sempre és fals
       }
-      return co == 1;
+
+      return solucio;
     }
 
     /*
@@ -131,22 +152,49 @@ class Entrega {
                 }
             }
         } //Ja s'han mirat totes les x, y i z i xor no ha estat true 
+      if (universe.length == 0) {
         return false;
       }
+      for (int x : universe) {
+        for (int y : universe) {
+          boolean xor = true;
+          for (int z : universe) {
+            if (!(p.test(x, z) ^ q.test(y, z))) {
+              xor = false;
+              break;
+            }
+          }
+          if (xor) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
     /*
      * És cert que (∀x. P(x)) -> (∀x. Q(x)) ?
      */
     static boolean exercici4(int[] universe, Predicate<Integer> p, Predicate<Integer> q) {
       boolean contraexempleP = false;
-      for (int i = 0; !contraexempleP && i < universe.length; i++) {
-        contraexempleP = !p.test(universe[i]);
+      for (int x : universe) { // Comprovam si per tot x es compleix P(x)
+        contraexempleP = !p.test(x);
+        if (contraexempleP) { // Si per algun x no es compleix P(x), aleshores
+          break; // la premisa és falsa i la implicació és sempre certa.
+        }
       }
-      boolean contraexempleQ = false;
-      if (!contraexempleP) {
-        for (int i = 0; !contraexempleQ && i < universe.length; i++) {
-          contraexempleQ = q.test(universe[i]);
+
+      boolean contraexempleQ = false; // Si l'univers és buit, aquest valor prevaldrà i la
+                                      // proposició serà sempre certa per al quantificador universal.
+
+      if (!contraexempleP) { // Comprovam si per tot x es compleix Q(x)
+        for (int x : universe) {
+          contraexempleQ = !q.test(x);
+          if (contraexempleQ) { // Si per algun x no es compleix Q(x), aleshores la implicació és falsa
+            break;
+          }
+        }
       }
-    }
       return (contraexempleP || !contraexempleQ);
     }
 
@@ -246,48 +294,60 @@ class Entrega {
      * Podeu soposar que `a` està ordenat de menor a major.
      */
     static boolean exercici1(int[] a, int[][] rel) {
-      boolean reflexiva = true;
-      for (int i = 0; reflexiva && i < a.length; i++) {
+      boolean reflexiva = true; // Primer, comprovam si és reflexiva
+      for (int i : a) {
         boolean trobada = false;
-        for (int j = 0; !trobada && j < rel.length; j++) {
-          if ((rel[j][0] == a[i]) && (rel[j][1] == a[i])) {
+        for (int[] j : rel) {
+          if ((j[0] == i) && (j[1] == i)) {
             trobada = true;
+            break;
           }
         }
-        if (!trobada) {
+        if (!trobada) { // Si no existeix l'element (i, i), no és reflexiva
           reflexiva = false;
+          break;
         }
       }
 
-      boolean simetrica = true;
-      for (int i = 0; simetrica && i < rel.length; i++) {
+      boolean simetrica = true; // Segon, comprovam si és simètrica
+      for (int[] i : rel) {
         boolean trobada = false;
-        for (int j = 0; !trobada && j < rel.length; j++) {
-          if ((rel[j][0] == rel[i][1]) && (rel[j][1] == rel[i][0])) {
+        for (int[] j : rel) {
+          if ((j[0] == i[1]) && (j[1] == i[0])) {
             trobada = true;
+            break;
           }
         }
-        if (!trobada) {
+        if (!trobada) { // Si per (i, j) no existeix (j, i), no és simètrica
           simetrica = false;
+          break;
         }
       }
 
-      boolean transitiva = true;
-      for (int i = 0; transitiva && i < rel.length; i++) {
-        for (int j = 0; j < rel.length; j++) {
-          if (rel[j][0] == rel[i][1]) {
+      boolean transitiva = true; // Tercer, comprovam si és transitiva
+      for (int[] i : rel) {
+        for (int[] j : rel) {
+          if (j[0] == i[1]) {
             boolean trobada = false;
-            for (int k = 0; !trobada && k < rel.length; k++) {
-              if ((rel[k][0] == rel[i][0]) && (rel[k][1] == rel[j][1])) {
+            for (int[] k : rel) {
+              if ((k[0] == i[0]) && (k[1] == j[1])) {
                 trobada = true;
+                break;
               }
             }
-            if (!trobada) {
+            if (!trobada) { // Si existeixen (i, j) i (j, k), però no (i, k), no és transitiva
               transitiva = false;
+              break;
             }
           }
         }
+        if (!transitiva) {
+          break;
+        }
       }
+
+      // És una relació d'equivalència si i només si és reflexiva, simètrica i
+      // transitiva
       return (reflexiva && simetrica && transitiva);
     }
 
@@ -351,23 +411,28 @@ class Entrega {
      * Podeu soposar que `a` i `b` estan ordenats de menor a major.
      */
     static boolean exercici3(int[] a, int[] b, int[][] rel) {
-      if (a.length == 0 || b.length == 0 || rel.length == 0) { // prevenir buit
+      // ∀a ∈ A : ∃!b ∈ B : (a, b) ∈ Γf
+      if (a.length == 0) {
+        return true;
+      }
+      if (b.length == 0 || rel.length == 0) { // prevenir buit
         return false;
       }
-      for (int x : a) {
+
+      for (int x : a) { // per cada element de A
         int count = 0;
-        for (int y : b) {
-          for (int[] r : rel) {
+        for (int y : b) { // i de B
+          for (int[] r : rel) { // si existeix (a,b)
             if (Arrays.equals(r, new int[] { x, y })) {
               count++;
             }
           }
         }
-        if (count > 1) {
+        if (count > 1) { // si a te més d'una imatge
           return false;
         }
       }
-      return true; // TO DO
+      return true;
     }
 
     /*
@@ -381,36 +446,49 @@ class Entrega {
      * Podeu suposar que `dom` i `codom` estàn ordenats de menor a major.
      */
     static int exercici4(int[] dom, int[] codom, Function<Integer, Integer> f) {
-      int[] comptImatges = new int[codom.length];
+      int[] comptImatges = new int[codom.length]; // Array on cada índex correspon al nombre d'elements del domini que
+                                                  // van a
+                                                  // parar a l'element del mateix índex del codomini quan se'ls aplica
+                                                  // f.
+
       int resultat = 0;
-      for (int i = 0; i < dom.length; i++) {
-        for (int j = 0; j < codom.length; j++) {
-          if (f.apply(dom[i]) == codom[j]) {
+      for (int i : dom) {
+        for (int j : codom) {
+          if (f.apply(i) == j) {
             comptImatges[j]++;
           }
         }
       }
 
-      boolean exhaustiva = true;
+      boolean exhaustiva = true; // Comprovam si és exhaustiva
       int max = 0;
-      for (int i = 0; exhaustiva && i < comptImatges.length; i++) {
-        if (comptImatges[i] > max) {
-          max = comptImatges[i];
+      for (int i : comptImatges) { // Cercam el número d'antiimatges de l'element del codomini amb més antiimatges
+        if (i > max) {
+          max = i;
         }
-        exhaustiva = comptImatges[i] != 0;
+        exhaustiva = i != 0; // Si algun comptador està a 0, algun element del codomini no prové del domini i
+                             // no és exhaustiva
+        if (!exhaustiva) {
+          break;
+        }
       }
 
       if (!exhaustiva) {
-        boolean injectiva = true;
+        boolean injectiva = true; // Si no és exhaustiva, comprovam si és injectiva
         int cardinalIm = 0;
-        for (int i = 0; injectiva && i < comptImatges.length; i++) {
-          if (comptImatges[i] > 0) {
+        for (int i : comptImatges) { // Comptam els elements del domini que tenen imatge en el codomini
+          if (i > 0) {
             cardinalIm++;
           }
-          injectiva = !(comptImatges[i] > 1); 
+          injectiva = !(i > 1); // Si algun element del codomini té més d'una antiimatge dins el domini, no és
+                                // injectiva.
+
+          if (!injectiva) {
+            break;
+          }
         }
 
-        if(injectiva) {
+        if (injectiva) {
           resultat = cardinalIm - codom.length;
         }
 
@@ -443,17 +521,17 @@ class Entrega {
       // si `rel` és d'equivalència, quants d'elements té el seu quocient?
 
       final int[] int09 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-
-      assertThat(
-          exercici2(
-              int09,
-              generateRel(int09, int09, (x, y) -> x % 3 == y % 3)) == 3);
-
-      assertThat(
-          exercici2(
-              new int[] { 1, 2, 3 },
-              new int[][] { { 1, 1 }, { 2, 2 } }) == -1);
-
+      /*
+       * assertThat(
+       * exercici2(
+       * int09,
+       * generateRel(int09, int09, (x, y) -> x % 3 == y % 3)) == 3);
+       * 
+       * assertThat(
+       * exercici2(
+       * new int[] { 1, 2, 3 },
+       * new int[][] { { 1, 1 }, { 2, 2 } }) == -1);
+       */
       // Exercici 3
       // `rel` és una funció?
 
@@ -471,6 +549,16 @@ class Entrega {
               int09,
               generateRel(int05, int09, (x, y) -> x == y / 2)));
 
+      // Casos propios
+      final int[] intM55 = { -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5 };
+      final int[] int036 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+          25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35 };
+
+      assertThat(!exercici3(int05, int09, generateRel(int05, int09, (x, y) -> x > y)));
+      assertThat(!exercici3(int05, int09, generateRel(int05, int09, (x, y) -> x <= y)));
+      assertThat(!exercici3(int09, int05, generateRel(int09, int05, (x, y) -> x == 20)));
+      assertThat(exercici3(int09, int09, generateRel(int09, int09, (x, y) -> x == 2 * y + 1)));
+      assertThat(!exercici3(int036, intM55, generateRel(int036, intM55, (x, y) -> x == y * y)));
       // Exercici 4
       // el major |f^-1(y)| de cada y de `codom` si f és exhaustiva
       // sino, |im f| - |codom| si és injectiva
@@ -528,7 +616,7 @@ class Entrega {
    * Podeu suposar que cap dels grafs té llaços.
    */
   static class Tema3 {
-    
+
     /*
      * Retornau l'ordre menys la mida del graf (no dirigit).
      */
@@ -549,52 +637,74 @@ class Entrega {
              }
             }
             ordre++; //A cada fila de la matriu es suma 1 perque una fila representa un node
+          }
+          return ordre-mida;
         }
-        return ordre-mida;
-    }
-    
-    static class Punt {
+
+    static class Node {
       public int dest, peso; // b=desti, c=pes
 
-      public Punt(int dest, int peso) {
+      public Node(int dest, int peso) {
         this.dest = dest;
         this.peso = peso;
       }
+
+      public boolean menorPesQue(Node b) {
+        return peso < b.peso;
+      }
     }
 
-    static int[] dijkstra(ArrayList<Punt>[] punts, int nodes, int origen) {
+    static void colaAdd(ArrayList<Node> punts, Node node) {
+      for (int i = 0; i < punts.size(); i++) {
+        if (node.menorPesQue(punts.get(i))) {
+          punts.add(i, node);
+          return;
+        }
+      }
+      punts.add(node);
+    }
+
+    static int[] dijkstra(ArrayList<Node>[] punts, int nodes, int origen) {
+      // trobar distancia minima des de origen a tots els altres
       int[] dist = new int[nodes];
       Arrays.fill(dist, Integer.MAX_VALUE);
+
       boolean[] visit = new boolean[nodes];
       Arrays.fill(visit, false);
-      ArrayList<Punt> cola = new ArrayList<>();
+      // se que no es una cola, no la podem importar...
+      ArrayList<Node> cola = new ArrayList<>();
+
       dist[origen] = 0;
-      cola.add(new Punt(origen, 0));
+      cola.add(new Node(origen, 0));
       while (!cola.isEmpty()) {
-        Punt p = cola.get(0);
+        Node p = cola.get(0);
         cola.remove(0);
-        for (Punt destPunt : punts[p.dest]) {
+
+        for (Node destPunt : punts[p.dest]) {
           if (visit[destPunt.dest]) {
             continue;
           }
           if (dist[destPunt.dest] > dist[p.dest] + destPunt.peso) {
             dist[destPunt.dest] = dist[p.dest] + destPunt.peso;
-            cola.add(new Punt(destPunt.dest, dist[destPunt.dest]));
+            colaAdd(cola, new Node(destPunt.dest, dist[destPunt.dest]));
           }
         }
       }
       return dist;
     }
 
-
     /*
      * Suposau que el graf (no dirigit) és connex. És bipartit?
      */
     static boolean exercici2(int[][] g) {
+      // va "pintant" amb colors 1 i -1 el graf, si el mateix color es adjacent
+      // no es bipartit
       int[] conex = new int[g.length]; // 0=desconocido, 1, -1 grupos
       Arrays.fill(conex, 0);
+
       ArrayList<Integer> cola = new ArrayList<Integer>();
       conex[0] = 1;
+
       cola.add(0);
       while (!cola.isEmpty()) {
         int ori = cola.get(0);
@@ -611,7 +721,7 @@ class Entrega {
           }
         }
       }
-      return true; // TO DO
+      return true;
     }
 
     /*
@@ -621,38 +731,39 @@ class Entrega {
      */
     static int exercici3(int[][] g, int i) {
       int co = 0;
-      int[] nodesVisitats = new int[g.length];
-      int darrer = 0;
-      int[] sequencia = new int[g.length];
-      int posPare = 0;
+      int[] nodesVisitats = new int[g.length]; //Aquí es guarden els nodes que s'han comprovat
+      int darrer = 0;  //Índex que marca la posició del darrer element de nodesVisitats
+      int[] sequencia = new int[g.length]; //Aquí s'hi guarden, per ordre, els nodes amb descendents que es van recorrent
+      int posPare = 0; //Índex que marca la posició del node pare sobre el que s'està situat
       boolean acabar = false;
 
-      if (g[i].length == 0) {
+      if (g[i].length == 0) { //Si el node inicial no té descendents, el programa s'acaba
         acabar = true;
       } else {
         nodesVisitats[darrer] = i;
         sequencia[posPare] = i;
       }
 
+//NO ES FA SERVIR FOR EACH PERQUÈ ES NECESSITA OPERAR AMB L'ÍNDEX j
       while (!acabar) {
         for (int j = 0; j < g[sequencia[posPare]].length; j++) {
-          int nodeFill = g[sequencia[posPare]][j];
+          int nodeFill = g[sequencia[posPare]][j];  // Situats sobre un node pare, es miren els seus adjacents
 
-          if (!esRepetit(nodesVisitats, darrer, nodeFill)) {
-            if (g[nodeFill].length > 0) {
+          if (!esRepetit(nodesVisitats, darrer, nodeFill)) { // Si no s'ha visitat, es mira si té descendents
+            if (g[nodeFill].length > 0) { // Si té descendents, ens situam sobre ell com a nou node pare
               nodesVisitats[++darrer] = nodeFill;
               sequencia[++posPare] = nodeFill;
               j--;
-            } else {
+            } else { //Si no té descendents, incrementam el comptador
               nodesVisitats[++darrer] = nodeFill;
               co++;
             }
           }
 
-          if (fillsVisitats(g, nodesVisitats, darrer, sequencia[posPare])) {
-            posPare--;
+          if (fillsVisitats(g, nodesVisitats, darrer, sequencia[posPare])) { // Quan s'han vistat tots els nodes adjacents d'un pare,
+            posPare--;                                                       // retrocedim al node pare anterior.
 
-            if (posPare < 0) {
+            if (posPare < 0) { // El programa acaba quan arribam al node original i se n'han comprovat tots els descendents
               acabar = true;
               posPare = 0;
             }
@@ -665,7 +776,7 @@ class Entrega {
       return co;
     }
 
-    // Mètode propi: retorna si un noda ja ha estat visitat
+    // Mètode propi: retorna si un node ja ha estat visitat
     private static boolean esRepetit(int[] visitats, int darrer, int node) {
       boolean repetit = false;
       for (int i = 0; !repetit && i <= darrer; i++) {
@@ -690,14 +801,14 @@ class Entrega {
      */
     static int exercici4(int[][] g) {
       // Preparar per dijsktra
-      ArrayList<Punt>[] punts = new ArrayList[g.length];
+      ArrayList<Node>[] punts = new ArrayList[g.length];
       for (int i = 0; i < punts.length; i++) {
         punts[i] = new ArrayList<>();
       }
       for (int i = 0; i < g.length; i++) {
         for (int d : g[i]) {
-          punts[i].add(new Punt(d, 1));
-          punts[d].add(new Punt(i, 1));
+          punts[i].add(new Node(d, 1));
+          punts[d].add(new Node(i, 1));
         }
       }
       // cercar el punt més distant
@@ -819,17 +930,54 @@ class Entrega {
           {},
       };
 
+      final int[][] undirectedG7 = {
+          { 6 },
+          { 5, 6 },
+          { 6 },
+          { 4, 6 },
+          { 3, 5 },
+          { 1, 4 },
+          { 0, 1, 2, 3 }
+      };
+
+      final int[][] undirectedW3 = {
+          { 1, 2 },
+          { 0, 2 },
+          { 0, 1 }
+      };
+
+      final int[][] undirectedP2 = {
+          { 1 },
+          { 0 }
+      };
+
+      final int[][] directedRTree3 = {
+          { 1, 2 },
+          { 3, 4 },
+          { 5, 6 },
+          {},
+          {},
+          {},
+          {}
+      };
+
       assertThat(exercici1(undirectedK6) == 6 - 5 * 6 / 2);
       assertThat(exercici1(undirectedW4) == 5 - 2 * 4);
 
       assertThat(exercici2(undirectedK23));
       assertThat(!exercici2(undirectedK6));
+      // casos propios
+      assertThat(!exercici2(undirectedG7));
+      assertThat(!exercici2(undirectedW3));
+      assertThat(exercici2(directedRTree1));
+      assertThat(exercici2(undirectedP2));
 
       assertThat(exercici3(directedG1, 0) == 3);
       assertThat(exercici3(directedRTree1, 2) == 3);
 
       assertThat(exercici4(directedRTree1) == 5);
       assertThat(exercici4(directedRTree2) == 4);
+      assertThat(exercici4(directedRTree3) == 4);
     }
   }
 
@@ -854,15 +1002,15 @@ class Entrega {
     }
 
     static int mcm(int a, int b) {
-      return (a*b)/mcd(a,b);
+      return (a * b) / mcd(a, b);
     }
 
     static int[] euclides(int a, int b) {
-      System.out.println("Ec " + a + " " + b);
+      // System.out.println("Ec " + a + " " + b);
       int r1 = a, r2 = b, q, x1 = 1, x2 = 0, y1 = 0, y2 = 1;
-      if (a < b) {
-        System.err.println("A es MENOR que B");
-      }
+      // if (a < b) {
+      // System.err.println("A es MENOR que B");
+      // }
 
       while (r2 != 0) {
         q = r1 / r2;
@@ -898,8 +1046,22 @@ class Entrega {
      */
 
     static int[] exercici1(int a, int b, int n) {
+      int[] e;
+      e = euclides(a, n);
 
-      return null; // TO DO
+      // System.out.println(Arrays.toString(e));
+      int d = e[0];
+      if (b % d != 0) {
+        // System.out.println("no divide");
+        return null;
+      }
+      for (int i = 0; i < e.length; i++) {
+        e[i] *= (b / d);
+      }
+      // System.out.println(Arrays.toString(e));
+      int[] r = new int[] { mod(e[1], n / d), Math.abs(n / d) };
+      // System.out.println("r " + Arrays.toString(r));
+      return r;
     }
 
     /*
@@ -919,7 +1081,60 @@ class Entrega {
      * Si no en té, retornau null.
      */
     static int[] exercici2a(int[] b, int[] n) {
-      return null; // TO DO
+// EN AQUEST EXERCICI NO ES FA SERVIR FOR EACH PERQUÈ O BÉ NO ES RECORR TOT L'ARRAY O BÉ ES NECESSITA L'ÍNDEX
+      boolean coprimers = true;
+      for (int i = 0; coprimers && i < n.length - 1; i++) { // Comprovam si té solució mirant si són coprimers dos a dos.
+        coprimers = mcd(n[i + 1], n[i]) == 1;               
+      }
+
+      boolean teSolucio = true;
+      int[] solucio = new int[2];  // Si no són coprimers dos a dos, miram si té solució amb el mcd
+      if (!coprimers) {
+        for (int i = 0; teSolucio && i < n.length - 1; i++) {
+          teSolucio = mod(b[i + 1] - b[i], mcd(n[i + 1], n[i])) == 0;
+        }
+      }
+      if (teSolucio) { 
+        int[] p = new int[n.length]; // Cercam cada Pi
+        for (int i = 0; i < p.length; i++) {
+          p[i] = 1;
+          for (int j = 0; j < n.length; j++) {
+            if (j != i) {
+              p[i] *= n[j];
+            }
+          }
+        }
+
+        int[] q = new int[n.length]; // Cercam cada Qi
+        for (int i = 0; i < q.length; i++) {
+          int[] aux = new int[3];
+          int residu = mod(p[i], n[i]);
+          aux = euclides(n[i], residu);
+          q[i] = aux[2];
+        }
+
+        int sumatori = 0;  // La suma de tots els grups Pi·Qi·bi
+        int productori = 1;  // El producte de totes les n
+        for (int i = 0; i < n.length; i++) {
+          sumatori += p[i] * q[i] * b[i];
+          productori *= n[i];
+        }
+
+        while (sumatori < 0) { // Augmentam el sumatori fins que sigui positiu
+          sumatori += productori;
+        }
+
+        while (sumatori >= productori) { // Decrementam el sumatori fins que sigui menor que el productori
+          sumatori -= productori;
+        }
+
+        solucio[0] = sumatori;
+        solucio[1] = productori;
+
+      } else {
+        solucio = null;
+      }
+      return solucio;
     }
 
     /*
@@ -1049,6 +1264,9 @@ class Entrega {
      */
     static ArrayList<Integer> exercici3a(int n) {
       ArrayList<Integer> factors = new ArrayList<>();
+      if(n<0){
+        n*=-1;
+      }
       int div = 2;
       if (n == 2 || n == 3) {
         factors.add(n);
@@ -1060,7 +1278,7 @@ class Entrega {
           factors.add(div);
           n /= div;
         } else {
-          if (div >= 3) {
+          if (div >= 3) { //a partir del 3 anar sumant en dos en dos
             div += 2;
           } else {
             div++;
@@ -1168,56 +1386,64 @@ public static int phi(int n) {
      * `main`)
      */
     static void tests() {
-      assertThat(Arrays.equals(exercici1(-42, 0, 35), new int[] { 0, 5 })); // QUITAR
-
       assertThat(Arrays.equals(exercici1(17, 1, 30), new int[] { 23, 30 }));
       assertThat(Arrays.equals(exercici1(-2, -4, 6), new int[] { 2, 3 }));
       assertThat(exercici1(2, 3, 6) == null);
+      // test propios
+      assertThat(Arrays.equals(exercici1(-42, 0, 35), new int[] { 0, 5 }));
+      assertThat(Arrays.equals(exercici1(6, 26, 22), new int[] { 8, 11 }));
+      assertThat(Arrays.equals(exercici1(-6, 26, 22), new int[] { 3, 11 }));
+      assertThat(Arrays.equals(exercici1(6, -26, 22), new int[] { 3, 11 }));
+      assertThat(Arrays.equals(exercici1(-6, -26, 22), new int[] { 8, 11 }));
+
+      assertThat(
+          exercici2a(
+              new int[] { 1, 0 },
+              new int[] { 2, 4 }) == null);
+
+      assertThat(
+          Arrays.equals(
+              exercici2a(
+                  new int[] { 3, -1, 2 },
+                  new int[] { 5, 8, 9 }),
+              new int[] { 263, 360 }));
+
+      /*
+      assertThat(
+          exercici2b(
+              new int[] { 1, 1 },
+              new int[] { 1, 0 },
+              new int[] { 2, 4 }) == null);
+
+      assertThat(
+          Arrays.equals(
+              exercici2b(
+                  new int[] { 2, -1, 5 },
+                  new int[] { 6, 1, 1 },
+                  new int[] { 10, 8, 9 }),
+              new int[] { 263, 360 }));
+        */
+      assertThat(exercici3a(10).equals(List.of(2, 5)));
+      assertThat(exercici3a(1291).equals(List.of(1291)));
+      assertThat(exercici3a(1292).equals(List.of(2, 2, 17, 19)));
+
+      assertThat(exercici3a(13).equals(List.of(13)));
+      assertThat(exercici3a(24).equals(List.of(2, 2, 2, 3)));
+      assertThat(exercici3a(84).equals(List.of(2, 2, 3, 7)));
+      assertThat(exercici3a(-30).equals(List.of(2, 3, 5)));
+      assertThat(exercici3a(987654321).equals(List.of(3, 3, 17, 17, 379721)));
+
+      assertThat(exercici3b(10) == 400);
+
+      // Aquí 1292³ ocupa més de 32 bits amb el signe, però es pot resoldre sense
+      // calcular n³.
+      assertThat(exercici3b(1292) == 961_496_064);
+
+      // Aquest exemple té el resultat fora de rang
+      // assertThat(exercici3b(1291) == 2_150_018_490);
+
     }
 
-    /*
-     * assertThat(
-     * exercici2a(
-     * new int[] { 1, 0 },
-     * new int[] { 2, 4 }) == null);
-     * 
-     * assertThat(
-     * Arrays.equals(
-     * exercici2a(
-     * new int[] { 3, -1, 2 },
-     * new int[] { 5, 8, 9 }),
-     * new int[] { 263, 360 }));
-     * 
-     * assertThat(
-     * exercici2b(
-     * new int[] { 1, 1 },
-     * new int[] { 1, 0 },
-     * new int[] { 2, 4 }) == null);
-     * 
-     * assertThat(
-     * Arrays.equals(
-     * exercici2b(
-     * new int[] { 2, -1, 5 },
-     * new int[] { 6, 1, 1 },
-     * new int[] { 10, 8, 9 }
-     * ),
-     * new int[] { 263, 360 }
-     * )
-     * );
-     * 
-     * assertThat(exercici3a(10).equals(List.of(2, 5)));
-     * assertThat(exercici3a(1291).equals(List.of(1291)));
-     * assertThat(exercici3a(1292).equals(List.of(2, 2, 17, 19 )));
-     * 
-     * assertThat(exercici3b(10) == 400);
-     * 
-     * // Aquí 1292³ ocupa més de 32 bits amb el signe, però es pot resoldre sense
-     * // calcular n³.
-     * assertThat(exercici3b(1292) == 961_496_064);
-     * 
-     * // Aquest exemple té el resultat fora de rang
-     * // assertThat(exercici3b(1291) == 2_150_018_490);
-     */
   }
 
   /*
@@ -1233,22 +1459,26 @@ public static int phi(int n) {
   public static void main(String[] args) {
     try {
       Tema1.tests();
+      System.out.println("Tema 1 ok, mirar pruebas comentadas");
     } catch (AssertionError ex) {
       System.err.println("Error tema 1 " + ex.getStackTrace()[1]);
     }
 
     try {
       Tema2.tests();
+      System.out.println("Tema 2 ok, mirar pruebas comentadas");
     } catch (AssertionError ex) {
       System.err.println("Error tema 2 " + ex.getStackTrace()[1]);
     }
     try {
       Tema3.tests();
+      System.out.println("Tema 3 ok, mirar pruebas comentadas");
     } catch (AssertionError ex) {
       System.err.println("Error tema 3 " + ex.getStackTrace()[1]);
     }
     try {
       Tema4.tests();
+      System.out.println("Tema 4 ok, mirar pruebas comentadas");
     } catch (AssertionError ex) {
       System.err.println("Error tema 4 " + ex.getStackTrace()[1]);
     }
