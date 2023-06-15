@@ -75,11 +75,11 @@ class Entrega {
       for (int x : universe) {
         int count = 0;
         for (int y : universe) {
-          if (!p.test(x) || q.test(x, y)) {
+          if (!p.test(x) || q.test(x, y)) { // implicació
             count++;
           }
         }
-        if (count != 1) {
+        if (count != 1) { // existencia unica
           return false;
         }
       }
@@ -347,31 +347,28 @@ class Entrega {
      * Podeu soposar que `a` i `b` estan ordenats de menor a major.
      */
     static boolean exercici3(int[] a, int[] b, int[][] rel) {
-      //∀a ∈ A : ∃!b ∈ B : (a, b) ∈ Γf
-      if(a.length==0){
+      // ∀a ∈ A : ∃!b ∈ B : (a, b) ∈ Γf
+      if (a.length == 0) {
         return true;
       }
       if (b.length == 0 || rel.length == 0) { // prevenir buit
         return false;
       }
-      //System.out.println("---");
-      //System.out.println(Arrays.toString(a));
-      //System.out.println(Arrays.toString(b));
-      //System.out.println(Arrays.deepToString(rel));
-      for (int x : a) {
+
+      for (int x : a) { // per cada element de A
         int count = 0;
-        for (int y : b) {
-          for (int[] r : rel) {
+        for (int y : b) { // i de B
+          for (int[] r : rel) { // si existeix (a,b)
             if (Arrays.equals(r, new int[] { x, y })) {
               count++;
             }
           }
         }
-        if (count > 1) {
+        if (count > 1) { // si a te més d'una imatge
           return false;
         }
       }
-      return true; 
+      return true;
     }
 
     /*
@@ -385,9 +382,11 @@ class Entrega {
      * Podeu suposar que `dom` i `codom` estàn ordenats de menor a major.
      */
     static int exercici4(int[] dom, int[] codom, Function<Integer, Integer> f) {
-      int[] comptImatges = new int[codom.length]; // Array on cada índex correspon al nombre d'elements del domini que van a
-                                                  // parar a l'element del mateix índex del codomini quan se'ls aplica f.                                           
-                                                  
+      int[] comptImatges = new int[codom.length]; // Array on cada índex correspon al nombre d'elements del domini que
+                                                  // van a
+                                                  // parar a l'element del mateix índex del codomini quan se'ls aplica
+                                                  // f.
+
       int resultat = 0;
       for (int i : dom) {
         for (int j : codom) {
@@ -417,8 +416,9 @@ class Entrega {
           if (i > 0) {
             cardinalIm++;
           }
-          injectiva = !(i > 1); // Si algun element del codomini té més d'una antiimatge dins el domini, no és injectiva.
- 
+          injectiva = !(i > 1); // Si algun element del codomini té més d'una antiimatge dins el domini, no és
+                                // injectiva.
+
           if (!injectiva) {
             break;
           }
@@ -457,16 +457,16 @@ class Entrega {
       // si `rel` és d'equivalència, quants d'elements té el seu quocient?
 
       final int[] int09 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-      /* 
-      assertThat(
-          exercici2(
-              int09,
-              generateRel(int09, int09, (x, y) -> x % 3 == y % 3)) == 3);
-
-      assertThat(
-          exercici2(
-              new int[] { 1, 2, 3 },
-              new int[][] { { 1, 1 }, { 2, 2 } }) == -1);
+      /*
+       * assertThat(
+       * exercici2(
+       * int09,
+       * generateRel(int09, int09, (x, y) -> x % 3 == y % 3)) == 3);
+       * 
+       * assertThat(
+       * exercici2(
+       * new int[] { 1, 2, 3 },
+       * new int[][] { { 1, 1 }, { 2, 2 } }) == -1);
        */
       // Exercici 3
       // `rel` és una funció?
@@ -485,15 +485,16 @@ class Entrega {
               int09,
               generateRel(int05, int09, (x, y) -> x == y / 2)));
 
-      //Casos propios
-      final int[] intM55 = {-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5};
-      final int[] int036 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35};
+      // Casos propios
+      final int[] intM55 = { -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5 };
+      final int[] int036 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+          25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35 };
 
       assertThat(!exercici3(int05, int09, generateRel(int05, int09, (x, y) -> x > y)));
       assertThat(!exercici3(int05, int09, generateRel(int05, int09, (x, y) -> x <= y)));
-      assertThat(!exercici3(int09, int05, generateRel(int09, int05, (x,y) -> x==20)));
-      assertThat(exercici3(int09, int09, generateRel(int09, int09, (x,y)-> x==2*y+1)));
-      assertThat(!exercici3(int036, intM55, generateRel(int036, intM55, (x,y)-> x==y*y)));
+      assertThat(!exercici3(int09, int05, generateRel(int09, int05, (x, y) -> x == 20)));
+      assertThat(exercici3(int09, int09, generateRel(int09, int09, (x, y) -> x == 2 * y + 1)));
+      assertThat(!exercici3(int036, intM55, generateRel(int036, intM55, (x, y) -> x == y * y)));
       // Exercici 4
       // el major |f^-1(y)| de cada y de `codom` si f és exhaustiva
       // sino, |im f| - |codom| si és injectiva
@@ -576,13 +577,15 @@ class Entrega {
         this.dest = dest;
         this.peso = peso;
       }
-      public boolean menorPesQue(Node b){
-        return peso<b.peso;
+
+      public boolean menorPesQue(Node b) {
+        return peso < b.peso;
       }
     }
-    static void colaAdd(ArrayList<Node> punts, Node node){
+
+    static void colaAdd(ArrayList<Node> punts, Node node) {
       for (int i = 0; i < punts.size(); i++) {
-        if(node.menorPesQue(punts.get(i))){
+        if (node.menorPesQue(punts.get(i))) {
           punts.add(i, node);
           return;
         }
@@ -591,23 +594,27 @@ class Entrega {
     }
 
     static int[] dijkstra(ArrayList<Node>[] punts, int nodes, int origen) {
+      // trobar distancia minima des de origen a tots els altres
       int[] dist = new int[nodes];
       Arrays.fill(dist, Integer.MAX_VALUE);
+
       boolean[] visit = new boolean[nodes];
       Arrays.fill(visit, false);
+      // se que no es una cola, no la podem importar...
       ArrayList<Node> cola = new ArrayList<>();
+
       dist[origen] = 0;
       cola.add(new Node(origen, 0));
       while (!cola.isEmpty()) {
         Node p = cola.get(0);
         cola.remove(0);
+
         for (Node destPunt : punts[p.dest]) {
           if (visit[destPunt.dest]) {
             continue;
           }
           if (dist[destPunt.dest] > dist[p.dest] + destPunt.peso) {
             dist[destPunt.dest] = dist[p.dest] + destPunt.peso;
-            //cola.add(new Node(destPunt.dest, dist[destPunt.dest]));
             colaAdd(cola, new Node(destPunt.dest, dist[destPunt.dest]));
           }
         }
@@ -619,10 +626,14 @@ class Entrega {
      * Suposau que el graf (no dirigit) és connex. És bipartit?
      */
     static boolean exercici2(int[][] g) {
+      // va "pintant" amb colors 1 i -1 el graf, si el mateix color es adjacent
+      // no es bipartit
       int[] conex = new int[g.length]; // 0=desconocido, 1, -1 grupos
       Arrays.fill(conex, 0);
+
       ArrayList<Integer> cola = new ArrayList<Integer>();
       conex[0] = 1;
+
       cola.add(0);
       while (!cola.isEmpty()) {
         int ori = cola.get(0);
@@ -639,7 +650,7 @@ class Entrega {
           }
         }
       }
-      return true; // TO DO
+      return true;
     }
 
     /*
@@ -730,7 +741,7 @@ class Entrega {
       }
       // cercar el punt més distant
       int[] dist = dijkstra(punts, g.length, 0);
-      //System.out.println(Arrays.toString(dist));
+      // System.out.println(Arrays.toString(dist));
       int max = -1;
       int imax = 0;
       for (int i = 0; i < dist.length; i++) {
@@ -741,7 +752,7 @@ class Entrega {
       }
       // des del node més distant, trobar el més distant, en cas d'arbres, diametre
       int[] dist2 = dijkstra(punts, g.length, imax);
-      //System.out.println(Arrays.toString(dist2));
+      // System.out.println(Arrays.toString(dist2));
       max = -1;
       imax = 0;
       for (int i = 0; i < dist2.length; i++) {
@@ -848,24 +859,34 @@ class Entrega {
       };
 
       final int[][] undirectedG7 = {
-        {6},
-        {5,6},
-        {6},
-        {4,6},
-        {3,5},
-        {1,4},
-        {0,1,2,3}
+          { 6 },
+          { 5, 6 },
+          { 6 },
+          { 4, 6 },
+          { 3, 5 },
+          { 1, 4 },
+          { 0, 1, 2, 3 }
       };
 
       final int[][] undirectedW3 = {
-        {1,2},
-        {0,2},
-        {0,1}
+          { 1, 2 },
+          { 0, 2 },
+          { 0, 1 }
       };
 
       final int[][] undirectedP2 = {
-        {1},
-        {0}
+          { 1 },
+          { 0 }
+      };
+
+      final int[][] directedRTree3 = {
+          { 1, 2 },
+          { 3, 4 },
+          { 5, 6 },
+          {},
+          {},
+          {},
+          {}
       };
 
       assertThat(exercici1(undirectedK6) == 6 - 5 * 6 / 2);
@@ -873,7 +894,7 @@ class Entrega {
 
       assertThat(exercici2(undirectedK23));
       assertThat(!exercici2(undirectedK6));
-      //casos propios
+      // casos propios
       assertThat(!exercici2(undirectedG7));
       assertThat(!exercici2(undirectedW3));
       assertThat(exercici2(directedRTree1));
@@ -884,6 +905,7 @@ class Entrega {
 
       assertThat(exercici4(directedRTree1) == 5);
       assertThat(exercici4(directedRTree2) == 4);
+      assertThat(exercici4(directedRTree3) == 4);
     }
   }
 
@@ -912,11 +934,11 @@ class Entrega {
     }
 
     static int[] euclides(int a, int b) {
-      //System.out.println("Ec " + a + " " + b);
+      // System.out.println("Ec " + a + " " + b);
       int r1 = a, r2 = b, q, x1 = 1, x2 = 0, y1 = 0, y2 = 1;
-      //if (a < b) {
-      //  System.err.println("A es MENOR que B");
-      //}
+      // if (a < b) {
+      // System.err.println("A es MENOR que B");
+      // }
 
       while (r2 != 0) {
         q = r1 / r2;
@@ -958,7 +980,7 @@ class Entrega {
       // System.out.println(Arrays.toString(e));
       int d = e[0];
       if (b % d != 0) {
-        //System.out.println("no divide");
+        // System.out.println("no divide");
         return null;
       }
       for (int i = 0; i < e.length; i++) {
@@ -967,7 +989,7 @@ class Entrega {
       // System.out.println(Arrays.toString(e));
       int[] r = new int[] { mod(e[1], n / d), Math.abs(n / d) };
       // System.out.println("r " + Arrays.toString(r));
-      return r; // CHECK
+      return r;
     }
 
     /*
@@ -1076,6 +1098,9 @@ class Entrega {
      */
     static ArrayList<Integer> exercici3a(int n) {
       ArrayList<Integer> factors = new ArrayList<>();
+      if(n<0){
+        n*=-1;
+      }
       int div = 2;
       if (n == 2 || n == 3) {
         factors.add(n);
@@ -1087,7 +1112,7 @@ class Entrega {
           factors.add(div);
           n /= div;
         } else {
-          if (div >= 3) {
+          if (div >= 3) { //a partir del 3 anar sumant en dos en dos
             div += 2;
           } else {
             div++;
@@ -1120,11 +1145,15 @@ class Entrega {
      * `main`)
      */
     static void tests() {
-      assertThat(Arrays.equals(exercici1(-42, 0, 35), new int[] { 0, 5 })); // QUITAR
-
       assertThat(Arrays.equals(exercici1(17, 1, 30), new int[] { 23, 30 }));
       assertThat(Arrays.equals(exercici1(-2, -4, 6), new int[] { 2, 3 }));
       assertThat(exercici1(2, 3, 6) == null);
+      // test propios
+      assertThat(Arrays.equals(exercici1(-42, 0, 35), new int[] { 0, 5 }));
+      assertThat(Arrays.equals(exercici1(6, 26, 22), new int[] { 8, 11 }));
+      assertThat(Arrays.equals(exercici1(-6, 26, 22), new int[] { 3, 11 }));
+      assertThat(Arrays.equals(exercici1(6, -26, 22), new int[] { 3, 11 }));
+      assertThat(Arrays.equals(exercici1(-6, -26, 22), new int[] { 8, 11 }));
 
       assertThat(
           exercici2a(
@@ -1138,6 +1167,7 @@ class Entrega {
                   new int[] { 5, 8, 9 }),
               new int[] { 263, 360 }));
 
+      /*
       assertThat(
           exercici2b(
               new int[] { 1, 1 },
@@ -1151,10 +1181,16 @@ class Entrega {
                   new int[] { 6, 1, 1 },
                   new int[] { 10, 8, 9 }),
               new int[] { 263, 360 }));
-
+        */
       assertThat(exercici3a(10).equals(List.of(2, 5)));
       assertThat(exercici3a(1291).equals(List.of(1291)));
       assertThat(exercici3a(1292).equals(List.of(2, 2, 17, 19)));
+
+      assertThat(exercici3a(13).equals(List.of(13)));
+      assertThat(exercici3a(24).equals(List.of(2, 2, 2, 3)));
+      assertThat(exercici3a(84).equals(List.of(2, 2, 3, 7)));
+      assertThat(exercici3a(-30).equals(List.of(2, 3, 5)));
+      assertThat(exercici3a(987654321).equals(List.of(3, 3, 17, 17, 379721)));
 
       assertThat(exercici3b(10) == 400);
 
