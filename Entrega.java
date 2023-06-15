@@ -131,27 +131,27 @@ class Entrega {
      */
     static boolean exercici3(int[] universe, BiPredicate<Integer, Integer> p, BiPredicate<Integer, Integer> q) {
 
-      if(universe.length==0){
-            return false;
-        }
-        //Es miren totes les combinacions de x, y i z.
-        for (int x : universe) {
-            for (int y : universe) {
+      if (universe.length == 0) {
+        return false;
+      }
+      // Es miren totes les combinacions de x, y i z.
+      for (int x : universe) {
+        for (int y : universe) {
 
-              //Booleana que indica que es produeix la xor per tot z
-                boolean xor = true;
+          // Booleana que indica que es produeix la xor per tot z
+          boolean xor = true;
 
-                for (int z : universe) {  //Si no es produeix la xor en algún cas, 
-                    if (!(p.test(x, z) ^ q.test(y, z))) {//passam a la següent iteració
-                        xor = false;
-                        break;
-                    }
-                }
-                if (xor) { //Si en acabar el bucle de la z xor = true, 
-                    return true; //vol dir que totes les z ho compleixen
-                }
+          for (int z : universe) { // Si no es produeix la xor en algún cas,
+            if (!(p.test(x, z) ^ q.test(y, z))) {// passam a la següent iteració
+              xor = false;
+              break;
             }
-        } //Ja s'han mirat totes les x, y i z i xor no ha estat true 
+          }
+          if (xor) { // Si en acabar el bucle de la z xor = true,
+            return true; // vol dir que totes les z ho compleixen
+          }
+        }
+      } // Ja s'han mirat totes les x, y i z i xor no ha estat true
       if (universe.length == 0) {
         return false;
       }
@@ -359,50 +359,51 @@ class Entrega {
      * Podeu soposar que `a` està ordenat de menor a major.
      */
     static int exercici2(int[] a, int[][] rel) {
-      if (!(exercici1(a, rel))) {//Si no és d'equivalència retorna -1
-            return -1;
-        } else {
+      if (!(exercici1(a, rel))) {// Si no és d'equivalència retorna -1
+        return -1;
+      } else {
 
-            List<Set<Integer>> classesEQ = new ArrayList<>();
+        List<Set<Integer>> classesEQ = new ArrayList<>();
 
-            for (int[] fila : rel) {
+        for (int[] fila : rel) {
 
-                int x = fila[0]; //Primer valor de la fila
-                int y = fila[1]; //Segon valor
+          int x = fila[0]; // Primer valor de la fila
+          int y = fila[1]; // Segon valor
 
-                Set<Integer> classe1 = null; //Classe d'equivalència del primer valor
-                Set<Integer> classe2 = null; //Classe d'equivalència del segon valor
-                 
-                //For-each a través de les classes ja existents per veure si x o y ja hi son a qualcuna
-                for (Set<Integer> equivalenceClass : classesEQ) {
-                    if (equivalenceClass.contains(x)) { //S'ha trobat x a una classe
-                        classe1 = equivalenceClass;
-                    }
-                    if (equivalenceClass.contains(y)) { //S'ha trobat y a una classe
-                        classe2 = equivalenceClass;
-                    }
-                }
+          Set<Integer> classe1 = null; // Classe d'equivalència del primer valor
+          Set<Integer> classe2 = null; // Classe d'equivalència del segon valor
 
-                //Si ambdues classes són null és perque ni x ni y són a cap classe,doncs
-                //es crea una classe i s'hi afegeixen tots dos.
-                if (classe1 == null && classe2 == null) {
-                    Set<Integer> newClass = new HashSet<>();
-                    newClass.add(x);
-                    newClass.add(y);
-
-                    classesEQ.add(newClass);//S'afegeix la classe a la llista de classes
-                } else if (classe1 == null) {//Si sa classe 1 és buida s'afegeix x a la classe de y
-                    classe2.add(x);
-                } else if (classe2 == null) {//Si sa classe 2 és buida s'afegeix y a la classe de x
-                    classe1.add(y);
-                } else if (classe1 != classe2) {//Si cap classe és null es combinen i s'elimina la 2
-                    classe1.addAll(classe2);
-                    classesEQ.remove(classe2);
-                }
+          // For-each a través de les classes ja existents per veure si x o y ja hi son a
+          // qualcuna
+          for (Set<Integer> equivalenceClass : classesEQ) {
+            if (equivalenceClass.contains(x)) { // S'ha trobat x a una classe
+              classe1 = equivalenceClass;
             }
-            //Es retorna la quantitat de classes d'equivalència
-            return classesEQ.size();
+            if (equivalenceClass.contains(y)) { // S'ha trobat y a una classe
+              classe2 = equivalenceClass;
+            }
+          }
+
+          // Si ambdues classes són null és perque ni x ni y són a cap classe,doncs
+          // es crea una classe i s'hi afegeixen tots dos.
+          if (classe1 == null && classe2 == null) {
+            Set<Integer> newClass = new HashSet<>();
+            newClass.add(x);
+            newClass.add(y);
+
+            classesEQ.add(newClass);// S'afegeix la classe a la llista de classes
+          } else if (classe1 == null) {// Si sa classe 1 és buida s'afegeix x a la classe de y
+            classe2.add(x);
+          } else if (classe2 == null) {// Si sa classe 2 és buida s'afegeix y a la classe de x
+            classe1.add(y);
+          } else if (classe1 != classe2) {// Si cap classe és null es combinen i s'elimina la 2
+            classe1.addAll(classe2);
+            classesEQ.remove(classe2);
+          }
         }
+        // Es retorna la quantitat de classes d'equivalència
+        return classesEQ.size();
+      }
     }
 
     /*
@@ -521,17 +522,17 @@ class Entrega {
       // si `rel` és d'equivalència, quants d'elements té el seu quocient?
 
       final int[] int09 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-      /*
-       * assertThat(
-       * exercici2(
-       * int09,
-       * generateRel(int09, int09, (x, y) -> x % 3 == y % 3)) == 3);
-       * 
-       * assertThat(
-       * exercici2(
-       * new int[] { 1, 2, 3 },
-       * new int[][] { { 1, 1 }, { 2, 2 } }) == -1);
-       */
+
+      assertThat(
+          exercici2(
+              int09,
+              generateRel(int09, int09, (x, y) -> x % 3 == y % 3)) == 3);
+
+      assertThat(
+          exercici2(
+              new int[] { 1, 2, 3 },
+              new int[][] { { 1, 1 }, { 2, 2 } }) == -1);
+
       // Exercici 3
       // `rel` és una funció?
 
@@ -622,24 +623,24 @@ class Entrega {
      */
     static int exercici1(int[][] g) {
       int mida = 0;
-        int ordre = 0;
+      int ordre = 0;
 
-        //Bucles for per recórrer tots els elements de la matriu
+      // Bucles for per recórrer tots els elements de la matriu
 
-        for (int i = 0; i < g.length; i++) {
-            for (int j = 0; j < g[i].length; j++) {
+      for (int i = 0; i < g.length; i++) {
+        for (int j = 0; j < g[i].length; j++) {
 
-             if(i<g[i][j]){//Com que els nodes estan ordenats, si a la fila i trobam un nombre major, 
-                           //es sap que hi ha una aresta que no s'ha comptat, però si es troba 
-                           //un nombre menor que i, sabem que aqueixa aresta ja s'ha sumat abans
+          if (i < g[i][j]) {// Com que els nodes estan ordenats, si a la fila i trobam un nombre major,
+                            // es sap que hi ha una aresta que no s'ha comptat, però si es troba
+                            // un nombre menor que i, sabem que aqueixa aresta ja s'ha sumat abans
 
-                 mida++;
-             }
-            }
-            ordre++; //A cada fila de la matriu es suma 1 perque una fila representa un node
+            mida++;
           }
-          return ordre-mida;
         }
+        ordre++; // A cada fila de la matriu es suma 1 perque una fila representa un node
+      }
+      return ordre - mida;
+    }
 
     static class Node {
       public int dest, peso; // b=desti, c=pes
@@ -731,39 +732,42 @@ class Entrega {
      */
     static int exercici3(int[][] g, int i) {
       int co = 0;
-      int[] nodesVisitats = new int[g.length]; //Aquí es guarden els nodes que s'han comprovat
-      int darrer = 0;  //Índex que marca la posició del darrer element de nodesVisitats
-      int[] sequencia = new int[g.length]; //Aquí s'hi guarden, per ordre, els nodes amb descendents que es van recorrent
-      int posPare = 0; //Índex que marca la posició del node pare sobre el que s'està situat
+      int[] nodesVisitats = new int[g.length]; // Aquí es guarden els nodes que s'han comprovat
+      int darrer = 0; // Índex que marca la posició del darrer element de nodesVisitats
+      int[] sequencia = new int[g.length]; // Aquí s'hi guarden, per ordre, els nodes amb descendents que es van
+                                           // recorrent
+      int posPare = 0; // Índex que marca la posició del node pare sobre el que s'està situat
       boolean acabar = false;
 
-      if (g[i].length == 0) { //Si el node inicial no té descendents, el programa s'acaba
+      if (g[i].length == 0) { // Si el node inicial no té descendents, el programa s'acaba
         acabar = true;
       } else {
         nodesVisitats[darrer] = i;
         sequencia[posPare] = i;
       }
 
-//NO ES FA SERVIR FOR EACH PERQUÈ ES NECESSITA OPERAR AMB L'ÍNDEX j
+      // NO ES FA SERVIR FOR EACH PERQUÈ ES NECESSITA OPERAR AMB L'ÍNDEX j
       while (!acabar) {
         for (int j = 0; j < g[sequencia[posPare]].length; j++) {
-          int nodeFill = g[sequencia[posPare]][j];  // Situats sobre un node pare, es miren els seus adjacents
+          int nodeFill = g[sequencia[posPare]][j]; // Situats sobre un node pare, es miren els seus adjacents
 
           if (!esRepetit(nodesVisitats, darrer, nodeFill)) { // Si no s'ha visitat, es mira si té descendents
             if (g[nodeFill].length > 0) { // Si té descendents, ens situam sobre ell com a nou node pare
               nodesVisitats[++darrer] = nodeFill;
               sequencia[++posPare] = nodeFill;
               j--;
-            } else { //Si no té descendents, incrementam el comptador
+            } else { // Si no té descendents, incrementam el comptador
               nodesVisitats[++darrer] = nodeFill;
               co++;
             }
           }
 
-          if (fillsVisitats(g, nodesVisitats, darrer, sequencia[posPare])) { // Quan s'han vistat tots els nodes adjacents d'un pare,
-            posPare--;                                                       // retrocedim al node pare anterior.
+          if (fillsVisitats(g, nodesVisitats, darrer, sequencia[posPare])) { // Quan s'han vistat tots els nodes
+                                                                             // adjacents d'un pare,
+            posPare--; // retrocedim al node pare anterior.
 
-            if (posPare < 0) { // El programa acaba quan arribam al node original i se n'han comprovat tots els descendents
+            if (posPare < 0) { // El programa acaba quan arribam al node original i se n'han comprovat tots els
+                               // descendents
               acabar = true;
               posPare = 0;
             }
@@ -1081,20 +1085,22 @@ class Entrega {
      * Si no en té, retornau null.
      */
     static int[] exercici2a(int[] b, int[] n) {
-// EN AQUEST EXERCICI NO ES FA SERVIR FOR EACH PERQUÈ O BÉ NO ES RECORR TOT L'ARRAY O BÉ ES NECESSITA L'ÍNDEX
+      // EN AQUEST EXERCICI NO ES FA SERVIR FOR EACH PERQUÈ O BÉ NO ES RECORR TOT
+      // L'ARRAY O BÉ ES NECESSITA L'ÍNDEX
       boolean coprimers = true;
-      for (int i = 0; coprimers && i < n.length - 1; i++) { // Comprovam si té solució mirant si són coprimers dos a dos.
-        coprimers = mcd(n[i + 1], n[i]) == 1;               
+      for (int i = 0; coprimers && i < n.length - 1; i++) { // Comprovam si té solució mirant si són coprimers dos a
+                                                            // dos.
+        coprimers = mcd(n[i + 1], n[i]) == 1;
       }
 
       boolean teSolucio = true;
-      int[] solucio = new int[2];  // Si no són coprimers dos a dos, miram si té solució amb el mcd
+      int[] solucio = new int[2]; // Si no són coprimers dos a dos, miram si té solució amb el mcd
       if (!coprimers) {
         for (int i = 0; teSolucio && i < n.length - 1; i++) {
           teSolucio = mod(b[i + 1] - b[i], mcd(n[i + 1], n[i])) == 0;
         }
       }
-      if (teSolucio) { 
+      if (teSolucio) {
         int[] p = new int[n.length]; // Cercam cada Pi
         for (int i = 0; i < p.length; i++) {
           p[i] = 1;
@@ -1113,8 +1119,8 @@ class Entrega {
           q[i] = aux[2];
         }
 
-        int sumatori = 0;  // La suma de tots els grups Pi·Qi·bi
-        int productori = 1;  // El producte de totes les n
+        int sumatori = 0; // La suma de tots els grups Pi·Qi·bi
+        int productori = 1; // El producte de totes les n
         for (int i = 0; i < n.length; i++) {
           sumatori += p[i] * q[i] * b[i];
           productori *= n[i];
@@ -1154,102 +1160,102 @@ class Entrega {
      * Si no en té, retornau null.
      */
     static int[] exercici2b(int[] a, int[] b, int[] n) {
-        int c = 0;
-        int m = 1;//Inicialització del mòdul
+      int c = 0;
+      int m = 1;// Inicialització del mòdul
 
-        for (int i = 0; i < a.length; i++) {
+      for (int i = 0; i < a.length; i++) {
 
-            //Sumam el mod perque 'a' sigui positiu i l'eqüació no canvii
-            while (a[i] < 0) {
-                a[i] += n[i];
-                b[i] += n[i];
-            }
-            
-            //Reduim a i b als seus residus modul n
-            a[i] %= n[i];
-            b[i] %= n[i];
-            
-            //Si un dels dos elements és 0 no seran coprimers
-            if (a[i] == 0 || n[i] == 0) {
-                return null;
-            }
-            
-            int mcd = mcd(a[i], n[i]);
-            //Si b[i] no es divisible pel mcd de a[i] i n[i] no té solució
-            if (b[i] % mcd != 0) {
-                return null;
-            }
-            
-            //Es divideix tot entre el mcd per simplificar les equacions
-            a[i] /= mcd;
-            b[i] /= mcd;
-            n[i] /= mcd;
-
-            //Si n és 0 no té solució
-            if (n[i] == 0) {
-                return null;
-            }
-
-            //Invers modular de a modul n
-            int q = (b[i] * inversModular(a[i], n[i])) % n[i];
-            if ((q - c) % mcd(m, n[i]) != 0) {
-                return null;
-            }
-
-            //Calculam el teorema xinès del residu
-            c = TCR(c, m, q, n[i]);
-
-            //Actualització del mòdul
-            m *= n[i];
+        // Sumam el mod perque 'a' sigui positiu i l'eqüació no canvii
+        while (a[i] < 0) {
+          a[i] += n[i];
+          b[i] += n[i];
         }
 
-        //Si la solució és negativa li sumam el mòdul perque sigui positiva i no canvii
-        if (c < 0) {
-            c += m;
+        // Reduim a i b als seus residus modul n
+        a[i] %= n[i];
+        b[i] %= n[i];
+
+        // Si un dels dos elements és 0 no seran coprimers
+        if (a[i] == 0 || n[i] == 0) {
+          return null;
         }
-        return new int[]{c, m};
+
+        int mcd = mcd(a[i], n[i]);
+        // Si b[i] no es divisible pel mcd de a[i] i n[i] no té solució
+        if (b[i] % mcd != 0) {
+          return null;
+        }
+
+        // Es divideix tot entre el mcd per simplificar les equacions
+        a[i] /= mcd;
+        b[i] /= mcd;
+        n[i] /= mcd;
+
+        // Si n és 0 no té solució
+        if (n[i] == 0) {
+          return null;
+        }
+
+        // Invers modular de a modul n
+        int q = (b[i] * inversModular(a[i], n[i])) % n[i];
+        if ((q - c) % mcd(m, n[i]) != 0) {
+          return null;
+        }
+
+        // Calculam el teorema xinès del residu
+        c = TCR(c, m, q, n[i]);
+
+        // Actualització del mòdul
+        m *= n[i];
+      }
+
+      // Si la solució és negativa li sumam el mòdul perque sigui positiva i no canvii
+      if (c < 0) {
+        c += m;
+      }
+      return new int[] { c, m };
     }
 
     static int inversModular(int a, int m) {
-        int m1 = m;
-        int y = 0, x = 1;
+      int m1 = m;
+      int y = 0, x = 1;
 
-        //Si el mòdul és 1 l'invers no està definit
-        if (m1 == 1) {
-            return 0;
-        }
+      // Si el mòdul és 1 l'invers no està definit
+      if (m1 == 1) {
+        return 0;
+      }
 
-        //Es fa l'algorisme estès d'Euclides
-        while (a > 1 && m != 0) {
-            int q = a / m;
-            int r = m;
+      // Es fa l'algorisme estès d'Euclides
+      while (a > 1 && m != 0) {
+        int q = a / m;
+        int r = m;
 
-            m = a % m;
-            a = r;
-            r = y;
+        m = a % m;
+        a = r;
+        r = y;
 
-            y = x - q * y;
-            x = r;
-        }
+        y = x - q * y;
+        x = r;
+      }
 
-        //Si l'invers és negatiu es suma el mòdul fins que sigui positiu
-        if (x < 0) {
-            x += m1;
-        }
+      // Si l'invers és negatiu es suma el mòdul fins que sigui positiu
+      if (x < 0) {
+        x += m1;
+      }
 
-        return x;
+      return x;
     }
 
     static int TCR(int x1, int m1, int x2, int m2) {
-      //Si algún mòdul és 0 l'ecuació no té solució
-    if (m1 == 0 || m2 == 0) {
+      // Si algún mòdul és 0 l'ecuació no té solució
+      if (m1 == 0 || m2 == 0) {
         return 0;
+      }
+      // Calculam l'invers modular de m1 respecte a m2
+      int inversM = inversModular(m1, m2);
+      // A partir d'això calculam el teorema xinès del residu
+      return ((x2 - x1) * inversM % m2 * m1 + x1) % (m1 * m2);
     }
-    //Calculam l'invers modular de m1 respecte a m2
-    int inversM = inversModular(m1, m2);
-    //A partir d'això calculam el teorema xinès del residu
-    return ((x2 - x1) * inversM % m2 * m1 + x1) % (m1 * m2);
-}
 
     /*
      * Suposau que n > 1. Donau-ne la seva descomposició en nombres primers,
@@ -1264,8 +1270,8 @@ class Entrega {
      */
     static ArrayList<Integer> exercici3a(int n) {
       ArrayList<Integer> factors = new ArrayList<>();
-      if(n<0){
-        n*=-1;
+      if (n < 0) {
+        n *= -1;
       }
       int div = 2;
       if (n == 2 || n == 3) {
@@ -1278,7 +1284,7 @@ class Entrega {
           factors.add(div);
           n /= div;
         } else {
-          if (div >= 3) { //a partir del 3 anar sumant en dos en dos
+          if (div >= 3) { // a partir del 3 anar sumant en dos en dos
             div += 2;
           } else {
             div++;
@@ -1304,81 +1310,79 @@ class Entrega {
      */
     static int exercici3b(int n) {
 
-        int phi = 1;//phi=1 per anar multiplicant-lo
+      int phi = 1;// phi=1 per anar multiplicant-lo
 
-        ArrayList<Integer> factorsN = new ArrayList();//ArrayList on es guardara la factorització de n
-        factorsN = exercici3a(n);
+      ArrayList<Integer> factorsN = new ArrayList();// ArrayList on es guardara la factorització de n
+      factorsN = exercici3a(n);
 
-        ArrayList<Integer> factorsN3 = triplicarArrayList(factorsN);//Cada element de factorsN es
-                                                                   // guarda tres vegades i ordenat per 
-                                                                   //representar la factorització de n^3
-        int[] nombres = new int[factorsN3.size()];
-        int index = 0; //Index per nombres[]
+      ArrayList<Integer> factorsN3 = triplicarArrayList(factorsN);// Cada element de factorsN es
+                                                                  // guarda tres vegades i ordenat per
+                                                                  // representar la factorització de n^3
+      int[] nombres = new int[factorsN3.size()];
+      int index = 0; // Index per nombres[]
 
-        for (int i = 0; i < factorsN3.size(); i++) {
+      for (int i = 0; i < factorsN3.size(); i++) {
 
-            int valor = factorsN3.get(i);//Es guarda el valor de la posició i de factorsN3
-            int exponent = numeroApariciones(factorsN3, valor);
+        int valor = factorsN3.get(i);// Es guarda el valor de la posició i de factorsN3
+        int exponent = numeroApariciones(factorsN3, valor);
 
-            nombres[index] = (int) Math.pow(valor, exponent); //Guarda valor elevat a tantes vegades 
-                                                              //com apareix aquell nombre dins 
-                                                              //l'ArrayList a nombres[]
-            index++;
-            i += exponent - 1; //Ens movem exponent-1 posicions per no repetir nombres
+        nombres[index] = (int) Math.pow(valor, exponent); // Guarda valor elevat a tantes vegades
+                                                          // com apareix aquell nombre dins
+                                                          // l'ArrayList a nombres[]
+        index++;
+        i += exponent - 1; // Ens movem exponent-1 posicions per no repetir nombres
+      }
+
+      for (int i = 0; i < nombres.length; i++) {
+        if (nombres[i] > 0) { // Major que 0 per si l'array no s'ha omplit
+
+          phi *= phi(nombres[i]);// A phi se li multipliquen els phis de
+                                 // tots els nombres de la factorització
         }
-
-        for (int i = 0; i < nombres.length; i++) {
-            if (nombres[i] > 0) { //Major que 0 per si l'array no s'ha omplit
-
-                phi *= phi(nombres[i]);//A phi se li multipliquen els phis de
-                                      // tots els nombres de la factorització
-            }
-        }
-        return phi;
+      }
+      return phi;
     }
 
-public static int phi(int n) {
-        int phi = n;// Inicialitza phi a n
+    public static int phi(int n) {
+      int phi = n;// Inicialitza phi a n
 
-    // Recorr els possibles factors primers de n
-        for (int i = 2; i * i <= n; i++) {
-            if (n % i == 0) { // Si n mod i és 0
-                while (n % i == 0) { //Es van eliminant tots els múltiples de i a 'n'
-                    n /= i;
-                }
-                phi -= phi / i; //Es resten tots els nombres que s'han llevat
-            }
+      // Recorr els possibles factors primers de n
+      for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) { // Si n mod i és 0
+          while (n % i == 0) { // Es van eliminant tots els múltiples de i a 'n'
+            n /= i;
+          }
+          phi -= phi / i; // Es resten tots els nombres que s'han llevat
         }
-        if (n > 1) {
-            phi = phi/n; //En cas de que n sigui un nombre primer falta un factor primer més
-        }
-        return phi;
+      }
+      if (n > 1) {
+        phi = phi / n; // En cas de que n sigui un nombre primer falta un factor primer més
+      }
+      return phi;
     }
 
     public static int numeroApariciones(ArrayList<Integer> arrayList, int nombre) {
-      //Es conten les vegades que apareix el mateix nombre dins l'ArrayList
-        int count = 0;
-        for (int num : arrayList) {
-            if (num == nombre) {//Si el nombre dins l'array és igual al paràmetre contador++
-                count++;
-            }
+      // Es conten les vegades que apareix el mateix nombre dins l'ArrayList
+      int count = 0;
+      for (int num : arrayList) {
+        if (num == nombre) {// Si el nombre dins l'array és igual al paràmetre contador++
+          count++;
         }
-        return count;
+      }
+      return count;
     }
 
-    
-
     public static ArrayList<Integer> triplicarArrayList(ArrayList<Integer> list) {
-        ArrayList<Integer> novaLlista = new ArrayList<>();
+      ArrayList<Integer> novaLlista = new ArrayList<>();
 
-        //Es crea un nou ArrayList i s'hi afegeix cada element del paràmetre tres pics.
-        for (int num : list) {
-            novaLlista.add(num);
-            novaLlista.add(num);
-            novaLlista.add(num);
-        }
+      // Es crea un nou ArrayList i s'hi afegeix cada element del paràmetre tres pics.
+      for (int num : list) {
+        novaLlista.add(num);
+        novaLlista.add(num);
+        novaLlista.add(num);
+      }
 
-        return novaLlista;
+      return novaLlista;
     }
 
     /*
@@ -1408,7 +1412,6 @@ public static int phi(int n) {
                   new int[] { 5, 8, 9 }),
               new int[] { 263, 360 }));
 
-      
       assertThat(
           exercici2b(
               new int[] { 1, 1 },
@@ -1422,7 +1425,7 @@ public static int phi(int n) {
                   new int[] { 6, 1, 1 },
                   new int[] { 10, 8, 9 }),
               new int[] { 263, 360 }));
-        
+
       assertThat(exercici3a(10).equals(List.of(2, 5)));
       assertThat(exercici3a(1291).equals(List.of(1291)));
       assertThat(exercici3a(1292).equals(List.of(2, 2, 17, 19)));
@@ -1440,7 +1443,7 @@ public static int phi(int n) {
       assertThat(exercici3b(1292) == 961_496_064);
 
       // Aquest exemple té el resultat fora de rang
-      //assertThat(exercici3b(1291) == 2_150_018_490L);
+      // assertThat(exercici3b(1291) == 2_150_018_490L);
 
     }
 
