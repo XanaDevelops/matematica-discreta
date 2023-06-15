@@ -75,11 +75,11 @@ class Entrega {
       for (int x : universe) {
         int count = 0;
         for (int y : universe) {
-          if (!p.test(x) || q.test(x, y)) {
+          if (!p.test(x) || q.test(x, y)) { //implicació
             count++;
           }
         }
-        if (count != 1) {
+        if (count != 1) { //existencia unica
           return false;
         }
       }
@@ -353,20 +353,17 @@ class Entrega {
       if (b.length == 0 || rel.length == 0) { // prevenir buit
         return false;
       }
-      //System.out.println("---");
-      //System.out.println(Arrays.toString(a));
-      //System.out.println(Arrays.toString(b));
-      //System.out.println(Arrays.deepToString(rel));
-      for (int x : a) {
+
+      for (int x : a) { //per cada element de A
         int count = 0;
-        for (int y : b) {
-          for (int[] r : rel) {
+        for (int y : b) { //i de B
+          for (int[] r : rel) { //si existeix (a,b)
             if (Arrays.equals(r, new int[] { x, y })) {
               count++;
             }
           }
         }
-        if (count > 1) {
+        if (count > 1) { //si a te més d'una imatge
           return false;
         }
       }
@@ -580,23 +577,27 @@ class Entrega {
     }
 
     static int[] dijkstra(ArrayList<Node>[] punts, int nodes, int origen) {
+      //trobar distancia minima des de origen a tots els altres
       int[] dist = new int[nodes];
       Arrays.fill(dist, Integer.MAX_VALUE);
+
       boolean[] visit = new boolean[nodes];
       Arrays.fill(visit, false);
+      //se que no es una cola, no la podem importar...
       ArrayList<Node> cola = new ArrayList<>();
+      
       dist[origen] = 0;
       cola.add(new Node(origen, 0));
       while (!cola.isEmpty()) {
         Node p = cola.get(0);
         cola.remove(0);
+
         for (Node destPunt : punts[p.dest]) {
           if (visit[destPunt.dest]) {
             continue;
           }
           if (dist[destPunt.dest] > dist[p.dest] + destPunt.peso) {
             dist[destPunt.dest] = dist[p.dest] + destPunt.peso;
-            //cola.add(new Node(destPunt.dest, dist[destPunt.dest]));
             colaAdd(cola, new Node(destPunt.dest, dist[destPunt.dest]));
           }
         }
@@ -608,10 +609,14 @@ class Entrega {
      * Suposau que el graf (no dirigit) és connex. És bipartit?
      */
     static boolean exercici2(int[][] g) {
+      //va "pintant" amb colors 1 i -1 el graf, si el mateix color es adjacent
+      //no es bipartit
       int[] conex = new int[g.length]; // 0=desconocido, 1, -1 grupos
       Arrays.fill(conex, 0);
+
       ArrayList<Integer> cola = new ArrayList<Integer>();
       conex[0] = 1;
+      
       cola.add(0);
       while (!cola.isEmpty()) {
         int ori = cola.get(0);
@@ -628,7 +633,7 @@ class Entrega {
           }
         }
       }
-      return true; // TO DO
+      return true;
     }
 
     /*
