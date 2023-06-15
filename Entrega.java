@@ -673,6 +673,7 @@ class Entrega {
         sequencia[posPare] = i;
       }
 
+//NO ES FA SERVIR FOR EACH PERQUÈ ES NECESSITA OPERAR AMB L'ÍNDEX j
       while (!acabar) {
         for (int j = 0; j < g[sequencia[posPare]].length; j++) {
           int nodeFill = g[sequencia[posPare]][j];  // Situats sobre un node pare, es miren els seus adjacents
@@ -704,7 +705,7 @@ class Entrega {
       return co;
     }
 
-    // Mètode propi: retorna si un noda ja ha estat visitat
+    // Mètode propi: retorna si un node ja ha estat visitat
     private static boolean esRepetit(int[] visitats, int darrer, int node) {
       boolean repetit = false;
       for (int i = 0; !repetit && i <= darrer; i++) {
@@ -1009,19 +1010,20 @@ class Entrega {
      * Si no en té, retornau null.
      */
     static int[] exercici2a(int[] b, int[] n) {
+// EN AQUEST EXERCICI NO ES FA SERVIR FOR EACH PERQUÈ O BÉ NO ES RECORR TOT L'ARRAY O BÉ ES NECESSITA L'ÍNDEX
       boolean coprimers = true;
-      for (int i = 0; coprimers && i < n.length - 1; i++) {
-        coprimers = mcd(n[i + 1], n[i]) == 1;
+      for (int i = 0; coprimers && i < n.length - 1; i++) { // Comprovam si té solució mirant si són coprimers dos a dos.
+        coprimers = mcd(n[i + 1], n[i]) == 1;               
       }
 
       boolean teSolucio = true;
-      int[] solucio = new int[2];
+      int[] solucio = new int[2];  // Si no són coprimers dos a dos, miram si té solució amb el mcd
       if (!coprimers) {
         for (int i = 0; teSolucio && i < n.length - 1; i++) {
           teSolucio = mod(b[i + 1] - b[i], mcd(n[i + 1], n[i])) == 0;
         }
       }
-      if (teSolucio) {
+      if (teSolucio) { 
         int[] p = new int[n.length]; // Cercam cada Pi
         for (int i = 0; i < p.length; i++) {
           p[i] = 1;
@@ -1040,18 +1042,18 @@ class Entrega {
           q[i] = aux[2];
         }
 
-        int sumatori = 0;
-        int productori = 1;
+        int sumatori = 0;  // La suma de tots els grups Pi·Qi·bi
+        int productori = 1;  // El producte de totes les n
         for (int i = 0; i < n.length; i++) {
           sumatori += p[i] * q[i] * b[i];
           productori *= n[i];
         }
 
-        while (sumatori < 0) {
+        while (sumatori < 0) { // Augmentam el sumatori fins que sigui positiu
           sumatori += productori;
         }
 
-        while (sumatori >= productori) {
+        while (sumatori >= productori) { // Decrementam el sumatori fins que sigui menor que el productori
           sumatori -= productori;
         }
 
