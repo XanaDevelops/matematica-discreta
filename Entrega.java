@@ -115,7 +115,7 @@ class Entrega {
               co++;
             }
           }
-          solucio = co == 1; //La proposició és certa només si s'ha complert per un sol x
+          solucio = co == 1; // La proposició és certa només si s'ha complert per un sol x
         } else { // Si la premisa és sempre falsa, la proposició sempre és vertadera
           solucio = true;
         }
@@ -156,13 +156,22 @@ class Entrega {
      */
     static boolean exercici4(int[] universe, Predicate<Integer> p, Predicate<Integer> q) {
       boolean contraexempleP = false;
-      for (int i = 0; !contraexempleP && i < universe.length; i++) {
-        contraexempleP = !p.test(universe[i]);
+      for (int x : universe) { // Comprovam si per tot x es compleix P(x)
+        contraexempleP = !p.test(x);
+        if (contraexempleP) { // Si per algun x no es compleix P(x), aleshores
+          break;             // la premisa és falsa i la implicació és sempre certa.
+        }
       }
-      boolean contraexempleQ = false;
-      if (!contraexempleP) {
-        for (int i = 0; !contraexempleQ && i < universe.length; i++) {
-          contraexempleQ = q.test(universe[i]);
+
+      boolean contraexempleQ = false; // Si l'univers és buit, aquest valor prevaldrà i la
+                                      // proposició serà sempre certa per al quantificador universal.
+
+      if (!contraexempleP) { // Comprovam si per tot x es compleix Q(x)
+        for (int x : universe) {
+          contraexempleQ = !q.test(x);
+          if (contraexempleQ) { // Si per algun x no es compleix Q(x), aleshores la implicació és falsa
+            break;               
+          }
         }
       }
       return (contraexempleP || !contraexempleQ);
