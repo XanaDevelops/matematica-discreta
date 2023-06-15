@@ -982,8 +982,8 @@ class Entrega {
       }
       // System.out.println(Arrays.toString(e));
       int[] r = new int[] { mod(e[1], n / d), Math.abs(n / d) };
-      // System.out.println("r " + Arrays.toString(r));
-      return r; // CHECK
+      //System.out.println("r " + Arrays.toString(r));
+      return r; 
     }
 
     /*
@@ -1136,11 +1136,15 @@ class Entrega {
      * `main`)
      */
     static void tests() {
-      assertThat(Arrays.equals(exercici1(-42, 0, 35), new int[] { 0, 5 })); // QUITAR
-
       assertThat(Arrays.equals(exercici1(17, 1, 30), new int[] { 23, 30 }));
       assertThat(Arrays.equals(exercici1(-2, -4, 6), new int[] { 2, 3 }));
       assertThat(exercici1(2, 3, 6) == null);
+      //test propios
+      assertThat(Arrays.equals(exercici1(-42, 0, 35), new int[] { 0, 5 }));
+      assertThat(Arrays.equals(exercici1(6, 26, 22), new int[] {8,11}));
+      assertThat(Arrays.equals(exercici1(-6, 26, 22), new int[] {3,11}));
+      assertThat(Arrays.equals(exercici1(6, -26, 22), new int[] {3,11}));
+      assertThat(Arrays.equals(exercici1(-6, -26, 22), new int[] {8,11}));
 
       assertThat(
           exercici2a(
