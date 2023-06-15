@@ -1460,31 +1460,10 @@ class Entrega {
    * sigui `true`.
    */
   public static void main(String[] args) {
-    try {
-      Tema1.tests();
-      System.out.println("Tema 1 ok, mirar pruebas comentadas");
-    } catch (AssertionError ex) {
-      System.err.println("Error tema 1 " + ex.getStackTrace()[1]);
-    }
-
-    try {
-      Tema2.tests();
-      System.out.println("Tema 2 ok, mirar pruebas comentadas");
-    } catch (AssertionError ex) {
-      System.err.println("Error tema 2 " + ex.getStackTrace()[1]);
-    }
-    try {
-      Tema3.tests();
-      System.out.println("Tema 3 ok, mirar pruebas comentadas");
-    } catch (AssertionError ex) {
-      System.err.println("Error tema 3 " + ex.getStackTrace()[1]);
-    }
-    try {
-      Tema4.tests();
-      System.out.println("Tema 4 ok, mirar pruebas comentadas");
-    } catch (AssertionError ex) {
-      System.err.println("Error tema 4 " + ex.getStackTrace()[1]);
-    }
+    Tema1.tests();
+    Tema2.tests();
+    Tema3.tests();
+    Tema4.tests();
   }
 
   /// Si b és cert, no fa res. Si b és fals, llança una excepció (AssertionError).
