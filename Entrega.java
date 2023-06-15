@@ -551,33 +551,46 @@ class Entrega {
       return ordre - mida;
     }
 
-    static class Punt {
+    static class Node {
       public int dest, peso; // b=desti, c=pes
 
-      public Punt(int dest, int peso) {
+      public Node(int dest, int peso) {
         this.dest = dest;
         this.peso = peso;
       }
+      public boolean menorPesQue(Node b){
+        return peso<b.peso;
+      }
+    }
+    static void colaAdd(ArrayList<Node> punts, Node node){
+      for (int i = 0; i < punts.size(); i++) {
+        if(node.menorPesQue(punts.get(i))){
+          punts.add(i, node);
+          return;
+        }
+      }
+      punts.add(node);
     }
 
-    static int[] dijkstra(ArrayList<Punt>[] punts, int nodes, int origen) {
+    static int[] dijkstra(ArrayList<Node>[] punts, int nodes, int origen) {
       int[] dist = new int[nodes];
       Arrays.fill(dist, Integer.MAX_VALUE);
       boolean[] visit = new boolean[nodes];
       Arrays.fill(visit, false);
-      ArrayList<Punt> cola = new ArrayList<>();
+      ArrayList<Node> cola = new ArrayList<>();
       dist[origen] = 0;
-      cola.add(new Punt(origen, 0));
+      cola.add(new Node(origen, 0));
       while (!cola.isEmpty()) {
-        Punt p = cola.get(0);
+        Node p = cola.get(0);
         cola.remove(0);
-        for (Punt destPunt : punts[p.dest]) {
+        for (Node destPunt : punts[p.dest]) {
           if (visit[destPunt.dest]) {
             continue;
           }
           if (dist[destPunt.dest] > dist[p.dest] + destPunt.peso) {
             dist[destPunt.dest] = dist[p.dest] + destPunt.peso;
-            cola.add(new Punt(destPunt.dest, dist[destPunt.dest]));
+            //cola.add(new Node(destPunt.dest, dist[destPunt.dest]));
+            colaAdd(cola, new Node(destPunt.dest, dist[destPunt.dest]));
           }
         }
       }
@@ -687,19 +700,19 @@ class Entrega {
      */
     static int exercici4(int[][] g) {
       // Preparar per dijsktra
-      ArrayList<Punt>[] punts = new ArrayList[g.length];
+      ArrayList<Node>[] punts = new ArrayList[g.length];
       for (int i = 0; i < punts.length; i++) {
         punts[i] = new ArrayList<>();
       }
       for (int i = 0; i < g.length; i++) {
         for (int d : g[i]) {
-          punts[i].add(new Punt(d, 1));
-          punts[d].add(new Punt(i, 1));
+          punts[i].add(new Node(d, 1));
+          punts[d].add(new Node(i, 1));
         }
       }
       // cercar el punt més distant
       int[] dist = dijkstra(punts, g.length, 0);
-      // System.out.println(Arrays.toString(dist));
+      //System.out.println(Arrays.toString(dist));
       int max = -1;
       int imax = 0;
       for (int i = 0; i < dist.length; i++) {
@@ -710,7 +723,7 @@ class Entrega {
       }
       // des del node més distant, trobar el més distant, en cas d'arbres, diametre
       int[] dist2 = dijkstra(punts, g.length, imax);
-      // System.out.println(Arrays.toString(dist2));
+      //System.out.println(Arrays.toString(dist2));
       max = -1;
       imax = 0;
       for (int i = 0; i < dist2.length; i++) {
@@ -816,11 +829,37 @@ class Entrega {
           {},
       };
 
+      final int[][] undirectedG7 = {
+        {6},
+        {5,6},
+        {6},
+        {4,6},
+        {3,5},
+        {1,4},
+        {0,1,2,3}
+      };
+
+      final int[][] undirectedW3 = {
+        {1,2},
+        {0,2},
+        {0,1}
+      };
+
+      final int[][] undirectedP2 = {
+        {1},
+        {0}
+      };
+
       assertThat(exercici1(undirectedK6) == 6 - 5 * 6 / 2);
       assertThat(exercici1(undirectedW4) == 5 - 2 * 4);
 
       assertThat(exercici2(undirectedK23));
       assertThat(!exercici2(undirectedK6));
+      //casos propios
+      assertThat(!exercici2(undirectedG7));
+      assertThat(!exercici2(undirectedW3));
+      assertThat(exercici2(directedRTree1));
+      assertThat(exercici2(undirectedP2));
 
       assertThat(exercici3(directedG1, 0) == 3);
       assertThat(exercici3(directedRTree1, 2) == 3);
