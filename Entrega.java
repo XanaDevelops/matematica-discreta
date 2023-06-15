@@ -347,9 +347,17 @@ class Entrega {
      * Podeu soposar que `a` i `b` estan ordenats de menor a major.
      */
     static boolean exercici3(int[] a, int[] b, int[][] rel) {
-      if (a.length == 0 || b.length == 0 || rel.length == 0) { // prevenir buit
+      //∀a ∈ A : ∃!b ∈ B : (a, b) ∈ Γf
+      if(a.length==0){
+        return true;
+      }
+      if (b.length == 0 || rel.length == 0) { // prevenir buit
         return false;
       }
+      //System.out.println("---");
+      //System.out.println(Arrays.toString(a));
+      //System.out.println(Arrays.toString(b));
+      //System.out.println(Arrays.deepToString(rel));
       for (int x : a) {
         int count = 0;
         for (int y : b) {
@@ -363,7 +371,7 @@ class Entrega {
           return false;
         }
       }
-      return true; // TO DO
+      return true; 
     }
 
     /*
@@ -449,7 +457,7 @@ class Entrega {
       // si `rel` és d'equivalència, quants d'elements té el seu quocient?
 
       final int[] int09 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-
+      /* 
       assertThat(
           exercici2(
               int09,
@@ -459,7 +467,7 @@ class Entrega {
           exercici2(
               new int[] { 1, 2, 3 },
               new int[][] { { 1, 1 }, { 2, 2 } }) == -1);
-
+       */
       // Exercici 3
       // `rel` és una funció?
 
@@ -477,6 +485,15 @@ class Entrega {
               int09,
               generateRel(int05, int09, (x, y) -> x == y / 2)));
 
+      //Casos propios
+      final int[] intM55 = {-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5};
+      final int[] int036 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35};
+
+      assertThat(!exercici3(int05, int09, generateRel(int05, int09, (x, y) -> x > y)));
+      assertThat(!exercici3(int05, int09, generateRel(int05, int09, (x, y) -> x <= y)));
+      assertThat(!exercici3(int09, int05, generateRel(int09, int05, (x,y) -> x==20)));
+      assertThat(exercici3(int09, int09, generateRel(int09, int09, (x,y)-> x==2*y+1)));
+      assertThat(!exercici3(int036, intM55, generateRel(int036, intM55, (x,y)-> x==y*y)));
       // Exercici 4
       // el major |f^-1(y)| de cada y de `codom` si f és exhaustiva
       // sino, |im f| - |codom| si és injectiva
@@ -552,33 +569,46 @@ class Entrega {
       return ordre - mida;
     }
 
-    static class Punt {
+    static class Node {
       public int dest, peso; // b=desti, c=pes
 
-      public Punt(int dest, int peso) {
+      public Node(int dest, int peso) {
         this.dest = dest;
         this.peso = peso;
       }
+      public boolean menorPesQue(Node b){
+        return peso<b.peso;
+      }
+    }
+    static void colaAdd(ArrayList<Node> punts, Node node){
+      for (int i = 0; i < punts.size(); i++) {
+        if(node.menorPesQue(punts.get(i))){
+          punts.add(i, node);
+          return;
+        }
+      }
+      punts.add(node);
     }
 
-    static int[] dijkstra(ArrayList<Punt>[] punts, int nodes, int origen) {
+    static int[] dijkstra(ArrayList<Node>[] punts, int nodes, int origen) {
       int[] dist = new int[nodes];
       Arrays.fill(dist, Integer.MAX_VALUE);
       boolean[] visit = new boolean[nodes];
       Arrays.fill(visit, false);
-      ArrayList<Punt> cola = new ArrayList<>();
+      ArrayList<Node> cola = new ArrayList<>();
       dist[origen] = 0;
-      cola.add(new Punt(origen, 0));
+      cola.add(new Node(origen, 0));
       while (!cola.isEmpty()) {
-        Punt p = cola.get(0);
+        Node p = cola.get(0);
         cola.remove(0);
-        for (Punt destPunt : punts[p.dest]) {
+        for (Node destPunt : punts[p.dest]) {
           if (visit[destPunt.dest]) {
             continue;
           }
           if (dist[destPunt.dest] > dist[p.dest] + destPunt.peso) {
             dist[destPunt.dest] = dist[p.dest] + destPunt.peso;
-            cola.add(new Punt(destPunt.dest, dist[destPunt.dest]));
+            //cola.add(new Node(destPunt.dest, dist[destPunt.dest]));
+            colaAdd(cola, new Node(destPunt.dest, dist[destPunt.dest]));
           }
         }
       }
@@ -688,19 +718,19 @@ class Entrega {
      */
     static int exercici4(int[][] g) {
       // Preparar per dijsktra
-      ArrayList<Punt>[] punts = new ArrayList[g.length];
+      ArrayList<Node>[] punts = new ArrayList[g.length];
       for (int i = 0; i < punts.length; i++) {
         punts[i] = new ArrayList<>();
       }
       for (int i = 0; i < g.length; i++) {
         for (int d : g[i]) {
-          punts[i].add(new Punt(d, 1));
-          punts[d].add(new Punt(i, 1));
+          punts[i].add(new Node(d, 1));
+          punts[d].add(new Node(i, 1));
         }
       }
       // cercar el punt més distant
       int[] dist = dijkstra(punts, g.length, 0);
-      // System.out.println(Arrays.toString(dist));
+      //System.out.println(Arrays.toString(dist));
       int max = -1;
       int imax = 0;
       for (int i = 0; i < dist.length; i++) {
@@ -711,7 +741,7 @@ class Entrega {
       }
       // des del node més distant, trobar el més distant, en cas d'arbres, diametre
       int[] dist2 = dijkstra(punts, g.length, imax);
-      // System.out.println(Arrays.toString(dist2));
+      //System.out.println(Arrays.toString(dist2));
       max = -1;
       imax = 0;
       for (int i = 0; i < dist2.length; i++) {
@@ -817,11 +847,37 @@ class Entrega {
           {},
       };
 
+      final int[][] undirectedG7 = {
+        {6},
+        {5,6},
+        {6},
+        {4,6},
+        {3,5},
+        {1,4},
+        {0,1,2,3}
+      };
+
+      final int[][] undirectedW3 = {
+        {1,2},
+        {0,2},
+        {0,1}
+      };
+
+      final int[][] undirectedP2 = {
+        {1},
+        {0}
+      };
+
       assertThat(exercici1(undirectedK6) == 6 - 5 * 6 / 2);
       assertThat(exercici1(undirectedW4) == 5 - 2 * 4);
 
       assertThat(exercici2(undirectedK23));
       assertThat(!exercici2(undirectedK6));
+      //casos propios
+      assertThat(!exercici2(undirectedG7));
+      assertThat(!exercici2(undirectedW3));
+      assertThat(exercici2(directedRTree1));
+      assertThat(exercici2(undirectedP2));
 
       assertThat(exercici3(directedG1, 0) == 3);
       assertThat(exercici3(directedRTree1, 2) == 3);
@@ -856,11 +912,11 @@ class Entrega {
     }
 
     static int[] euclides(int a, int b) {
-      System.out.println("Ec " + a + " " + b);
+      //System.out.println("Ec " + a + " " + b);
       int r1 = a, r2 = b, q, x1 = 1, x2 = 0, y1 = 0, y2 = 1;
-      if (a < b) {
-        System.err.println("A es MENOR que B");
-      }
+      //if (a < b) {
+      //  System.err.println("A es MENOR que B");
+      //}
 
       while (r2 != 0) {
         q = r1 / r2;
@@ -902,7 +958,7 @@ class Entrega {
       // System.out.println(Arrays.toString(e));
       int d = e[0];
       if (b % d != 0) {
-        System.out.println("no divide");
+        //System.out.println("no divide");
         return null;
       }
       for (int i = 0; i < e.length; i++) {
@@ -1126,22 +1182,26 @@ class Entrega {
   public static void main(String[] args) {
     try {
       Tema1.tests();
+      System.out.println("Tema 1 ok, mirar pruebas comentadas");
     } catch (AssertionError ex) {
       System.err.println("Error tema 1 " + ex.getStackTrace()[1]);
     }
 
     try {
       Tema2.tests();
+      System.out.println("Tema 2 ok, mirar pruebas comentadas");
     } catch (AssertionError ex) {
       System.err.println("Error tema 2 " + ex.getStackTrace()[1]);
     }
     try {
       Tema3.tests();
+      System.out.println("Tema 3 ok, mirar pruebas comentadas");
     } catch (AssertionError ex) {
       System.err.println("Error tema 3 " + ex.getStackTrace()[1]);
     }
     try {
       Tema4.tests();
+      System.out.println("Tema 4 ok, mirar pruebas comentadas");
     } catch (AssertionError ex) {
       System.err.println("Error tema 4 " + ex.getStackTrace()[1]);
     }
