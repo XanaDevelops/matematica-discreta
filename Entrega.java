@@ -649,13 +649,13 @@ class Entrega {
      */
     static int exercici3(int[][] g, int i) {
       int co = 0;
-      int[] nodesVisitats = new int[g.length];
-      int darrer = 0;
-      int[] sequencia = new int[g.length];
-      int posPare = 0;
+      int[] nodesVisitats = new int[g.length]; //Aquí es guarden els nodes que s'han comprovat
+      int darrer = 0;  //Índex que marca la posició del darrer element de nodesVisitats
+      int[] sequencia = new int[g.length]; //Aquí s'hi guarden, per ordre, els nodes amb descendents que es van recorrent
+      int posPare = 0; //Índex que marca la posició del node pare sobre el que s'està situat
       boolean acabar = false;
 
-      if (g[i].length == 0) {
+      if (g[i].length == 0) { //Si el node inicial no té descendents, el programa s'acaba
         acabar = true;
       } else {
         nodesVisitats[darrer] = i;
@@ -664,23 +664,23 @@ class Entrega {
 
       while (!acabar) {
         for (int j = 0; j < g[sequencia[posPare]].length; j++) {
-          int nodeFill = g[sequencia[posPare]][j];
+          int nodeFill = g[sequencia[posPare]][j];  // Situats sobre un node pare, es miren els seus adjacents
 
-          if (!esRepetit(nodesVisitats, darrer, nodeFill)) {
-            if (g[nodeFill].length > 0) {
+          if (!esRepetit(nodesVisitats, darrer, nodeFill)) { // Si no s'ha visitat, es mira si té descendents
+            if (g[nodeFill].length > 0) { // Si té descendents, ens situam sobre ell com a nou node pare
               nodesVisitats[++darrer] = nodeFill;
               sequencia[++posPare] = nodeFill;
               j--;
-            } else {
+            } else { //Si no té descendents, incrementam el comptador
               nodesVisitats[++darrer] = nodeFill;
               co++;
             }
           }
 
-          if (fillsVisitats(g, nodesVisitats, darrer, sequencia[posPare])) {
-            posPare--;
+          if (fillsVisitats(g, nodesVisitats, darrer, sequencia[posPare])) { // Quan s'han vistat tots els nodes adjacents d'un pare,
+            posPare--;                                                       // retrocedim al node pare anterior.
 
-            if (posPare < 0) {
+            if (posPare < 0) { // El programa acaba quan arribam al node original i se n'han comprovat tots els descendents
               acabar = true;
               posPare = 0;
             }
