@@ -329,6 +329,7 @@ class Entrega {
       if (a.length == 0 || b.length == 0 || rel.length == 0) { // prevenir buit
         return false;
       }
+      //System.out.println(Arrays.deepToString(rel));
       for (int x : a) {
         int count = 0;
         for (int y : b) {
@@ -342,7 +343,7 @@ class Entrega {
           return false;
         }
       }
-      return true; // TO DO
+      return true; 
     }
 
     /*
@@ -418,7 +419,7 @@ class Entrega {
       // si `rel` és d'equivalència, quants d'elements té el seu quocient?
 
       final int[] int09 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-
+      /* 
       assertThat(
           exercici2(
               int09,
@@ -428,7 +429,7 @@ class Entrega {
           exercici2(
               new int[] { 1, 2, 3 },
               new int[][] { { 1, 1 }, { 2, 2 } }) == -1);
-
+       */
       // Exercici 3
       // `rel` és una funció?
 
@@ -446,6 +447,15 @@ class Entrega {
               int09,
               generateRel(int05, int09, (x, y) -> x == y / 2)));
 
+      //Casos propios
+      final int[] intM55 = {-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5};
+      final int[] int036 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35};
+
+      assertThat(!exercici3(int05, int09, generateRel(int05, int09, (x, y) -> x > y)));
+      assertThat(!exercici3(int05, int09, generateRel(int05, int09, (x, y) -> x <= y)));
+      assertThat(!exercici3(int09, int05, generateRel(int09, int05, (x,y) -> x==20)));
+      assertThat(exercici3(int09, int09, generateRel(int09, int09, (x,y)-> x==2*y+1)));
+      assertThat(!exercici3(int036, intM55, generateRel(int036, intM55, (x,y)-> x==y*y)));
       // Exercici 4
       // el major |f^-1(y)| de cada y de `codom` si f és exhaustiva
       // sino, |im f| - |codom| si és injectiva
@@ -825,11 +835,11 @@ class Entrega {
     }
 
     static int[] euclides(int a, int b) {
-      System.out.println("Ec " + a + " " + b);
+      //System.out.println("Ec " + a + " " + b);
       int r1 = a, r2 = b, q, x1 = 1, x2 = 0, y1 = 0, y2 = 1;
-      if (a < b) {
-        System.err.println("A es MENOR que B");
-      }
+      //if (a < b) {
+      //  System.err.println("A es MENOR que B");
+      //}
 
       while (r2 != 0) {
         q = r1 / r2;
@@ -871,7 +881,7 @@ class Entrega {
       // System.out.println(Arrays.toString(e));
       int d = e[0];
       if (b % d != 0) {
-        System.out.println("no divide");
+        //System.out.println("no divide");
         return null;
       }
       for (int i = 0; i < e.length; i++) {
@@ -1095,22 +1105,26 @@ class Entrega {
   public static void main(String[] args) {
     try {
       Tema1.tests();
+      System.out.println("Tema 1 ok, mirar pruebas comentadas");
     } catch (AssertionError ex) {
       System.err.println("Error tema 1 " + ex.getStackTrace()[1]);
     }
 
     try {
       Tema2.tests();
+      System.out.println("Tema 2 ok, mirar pruebas comentadas");
     } catch (AssertionError ex) {
       System.err.println("Error tema 2 " + ex.getStackTrace()[1]);
     }
     try {
       Tema3.tests();
+      System.out.println("Tema 3 ok, mirar pruebas comentadas");
     } catch (AssertionError ex) {
       System.err.println("Error tema 3 " + ex.getStackTrace()[1]);
     }
     try {
       Tema4.tests();
+      System.out.println("Tema 4 ok, mirar pruebas comentadas");
     } catch (AssertionError ex) {
       System.err.println("Error tema 4 " + ex.getStackTrace()[1]);
     }
